@@ -12,8 +12,3 @@
 ## Base
 * express.js
 * dotenv
-
-## Updates
->
-    2023-03-22
-    프로젝트 환경 구축
