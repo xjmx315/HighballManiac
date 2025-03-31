@@ -2,6 +2,8 @@
 import dotenv from 'dotenv';
 import express from 'express';
 
+import logger from './middlewares/logger.js';
+
 // 환경 변수 로드
 dotenv.config();
 
@@ -11,7 +13,10 @@ const app = express();
 // 포트 설정
 const PORT = process.env.PORT || 3000;
 
-// 기본 라우팅
+//미들웨어 플로우
+app.use(express.json());
+app.use(logger)
+
 app.get('/', (req, res) => {
     res.send('hi~');
 });
