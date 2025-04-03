@@ -24,17 +24,6 @@ app.get('/', (req, res) => {
 
 app.use('/api', apiRouter);
 
-app.get('/items', (req, res) => {
-    db.query('SELECT * FROM items', (err, result) => {
-        if (err){
-            console.error('쿼리 오류: ', err);
-            res.status(500).send('서버 오류 - 쿼리 오류');
-            return;
-        }
-        res.json(result);
-    })
-})
-
 // 서버 실행
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

@@ -8,6 +8,6 @@ import itemController from '../controllers/itemController.js';
 const router = express.Router();
 
 router.get('/item', itemController.getItems);
-//router.post('/item/search/:name', itemController.searchByName);
+router.get('/item/search', itemController.searchItemByName);
 
 export default router;

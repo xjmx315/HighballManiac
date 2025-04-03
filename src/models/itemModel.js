@@ -13,9 +13,23 @@ const getItems = async () => {
     }
 };
 
-export default {getItems: getItems};
+const searchItemByName = async (searchTerm) => {
+    try{
+        const [results] = await db.query('SELECT * FROM items WHERE name LIKE ?', [`%${searchTerm}%`]);
+        return results;
+    }
+    catch(err){
+        console.error('쿼리 실패: ', err);
+        return err;
+    }
+}
 
-/*
+export default {
+    getItems: getItems,
+    searchItemByName: searchItemByName
+};
+
+/*콜백 기반 쿼리
 app.get('/items', (req, res) => {
     db.query('SELECT * FROM items', (err, result) => {
         if (err){

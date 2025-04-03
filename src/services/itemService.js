@@ -7,4 +7,11 @@ const getItems = async () => {
     return await Item.getItems();
 };
 
-export default {getItems: getItems};
+const searchItemByName = async (searchTerm) => {
+    return await Item.searchItemByName(searchTerm);
+};
+
+export default {
+    getItems: getItems,
+    searchItemByName: searchItemByName
+};
