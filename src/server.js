@@ -1,9 +1,9 @@
 // 패키지 로드
 import dotenv from 'dotenv';
 import express from 'express';
-import mysql from 'mysql2';
 
 import logger from './middlewares/logger.js';
+import apiRouter from './routes/apiRouter.js';
 
 // 환경 변수 로드
 dotenv.config();
@@ -14,30 +14,15 @@ const app = express();
 // 포트 설정
 const PORT = process.env.PORT || 3000;
 
-//db 연결
-const db = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    user: process.env.DBUSERNAME,
-    password: process.env.DBPASSWORD,
-    database: 'highball_maniac'
-});
-
-db.connect((err) => {
-    if (err){
-        console.error('db 연결 실패:', err);
-        return;
-    }
-    console.log('db 연결 성공!');
-});
-
 //미들웨어 플로우
 app.use(express.json());
-app.use(logger)
+app.use(logger);
 
 app.get('/', (req, res) => {
     res.send('hi~');
 });
+
+app.use('/api', apiRouter);
 
 app.get('/items', (req, res) => {
     db.query('SELECT * FROM items', (err, result) => {
