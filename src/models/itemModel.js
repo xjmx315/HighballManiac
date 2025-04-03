@@ -1,15 +1,16 @@
 //itemModel.js
 
-//import getItems from '../services/itemService';
 import db from './db.js';
 
 const getItems = async () => {
-    return db.query('SELECT * FROM items', (err, result) => {
-        if (err){
-            console.error('쿼리 오류: ', err);
-        }
-        return result;
-    });
+    try{
+        const [results] = await db.query('SELECT * FROM items');
+        return results;
+    }
+    catch(err){
+        console.error('쿼리 실패: ', err);
+        return err;
+    }
 };
 
 export default {getItems: getItems};
