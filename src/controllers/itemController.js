@@ -1,6 +1,6 @@
 //itemController.js
 
-import itemService from '../services/itemService';
+import itemService from '../services/itemService.js';
 
 const getItems = async (req, res) => {
     try {
@@ -12,4 +12,4 @@ const getItems = async (req, res) => {
     }
 };
 
-export default getItems;
+export default { getItems: getItems };

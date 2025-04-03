@@ -1,8 +1,9 @@
 //itemModel.js
 
-import db from './db';
+//import getItems from '../services/itemService';
+import db from './db.js';
 
-exports.getItems = async () => {
+const getItems = async () => {
     return db.query('SELECT * FROM items', (err, result) => {
         if (err){
             console.error('쿼리 오류: ', err);
@@ -10,6 +11,8 @@ exports.getItems = async () => {
         return result;
     });
 };
+
+export default {getItems: getItems};
 
 /*
 app.get('/items', (req, res) => {

@@ -1,7 +1,10 @@
 //itemService.js
 
-import Item from '../models/itemModel';
+//import getItems from '../controllers/itemController';
+import Item from '../models/itemModel.js';
 
-exports.getItems = async () => {
+const getItems = async () => {
     return await Item.getItems();
 };
+
+export default {getItems: getItems};
