@@ -1,6 +1,7 @@
 // 패키지 로드
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
 
 import logger from './middlewares/logger.js';
 import apiRouter from './routes/apiRouter.js';
@@ -15,6 +16,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 //미들웨어 플로우
+if (process.env.DEV){
+    app.use(cors());
+}
+else{
+    app.use(cors({
+        origin: process.env.REACTORIGIN
+    }));
+}
+
 app.use(express.json());
 app.use(logger);
 
