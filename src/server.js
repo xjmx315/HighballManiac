@@ -21,7 +21,7 @@ if (process.env.DEV){
 }
 else{
     app.use(cors({
-        origin: process.env.REACTORIGIN
+        origin: process.env.REACT_ORIGIN
     }));
 }
 
