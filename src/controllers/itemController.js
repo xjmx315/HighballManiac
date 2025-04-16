@@ -16,7 +16,7 @@ const searchItemByName = async (req, res) => {
     try {
         const searchTerm = req.query.name;
         if (!searchTerm){
-            return res.status(400).json({message: '검색어가 없습니다. '})
+            return res.status(400).json({message: '검색어가 없습니다. '});
         }
         const result = await itemService.searchItemByName(searchTerm);
         res.json(result);
