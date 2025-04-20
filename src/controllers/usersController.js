@@ -21,11 +21,24 @@ const newUser = async (req, res) => {
 };
 
 const login = (req, res) => {
-    
+    const {password, name} = req.body;
+
+    if (!password || !name){
+        return res.status(400).json({message: "id와 비밀번호는 필수 항목입니다"});
+    }
+
+    if (usersService.login(password, name)){
+        return res.status(200).json({message: "로그인 성공"});
+    }
+    else {
+        return res.status(202).json({message: "아이디 또는 비밀번호가 올바르지 않습니다"});
+    }
 };
 
 
 const deleteUser = (req, res) => {
+    const {password, name} = req.body;
+
 
 };
 
