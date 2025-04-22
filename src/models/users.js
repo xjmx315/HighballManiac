@@ -11,6 +11,15 @@ const getIdByName = async (name) => {
     return ids;
 };
 
+const getPasswordById = async (id) => {
+    const [password] = await db.execute(
+        'SELECT password FROM users WHERE id = ?',
+        [id]
+    );
+    return password;
+};
+
+
 const addUser = async (email, hashedPassword, name) => {
     const [result] = await db.execute(
         'INSERT INTO users (email, password, name, created_at) VALUES (?, ?, ?, NOW())',
@@ -21,5 +30,6 @@ const addUser = async (email, hashedPassword, name) => {
 
 export default {
     getIdByName: getIdByName,
+    getPasswordById: getPasswordById,
     addUser: addUser
 }

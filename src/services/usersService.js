@@ -17,21 +17,36 @@ const addUser = async (userData) => {
 };
 
 const login = async (password, name) => {
+    //유저 검색
+    const ids = await users.getIdByName(name);
+    if (ids.length === 0){
+        return false;
+    }
+    const id = ids[0].id;
+
     //비밀번호 검증
-    const passwordCheck = await bcrypt.compare(password, user.password);
-    if (!passwordCorrect){
+    const hashedPassword = await users.getPasswordById(id)
+    .then((originPassword) => {
+        return originPassword[0].password;
+    });
+
+    const passwordCheck = await bcrypt.compare(password, hashedPassword);
+    
+    if (!passwordCheck){
         return false;
     }
 
     const token = jwt.sign(
-        {userName: name},
+        {userName: name, userId: id},
         'jwt_secret',
         {expiresIn: "1h"}
     );
-};
 
+    return token;
+};
 
 export default {
     getIdByName: getIdByName,
-    addUser: addUser
+    addUser: addUser,
+    login: login
 }

@@ -20,20 +20,27 @@ const newUser = async (req, res) => {
     return res.status(201).json({message: "생성 완료"});
 };
 
-const login = (req, res) => {
+const login = async (req, res) => {
     const {password, name} = req.body;
 
     if (!password || !name){
         return res.status(400).json({message: "id와 비밀번호는 필수 항목입니다"});
     }
 
-    if (usersService.login(password, name)){
-        return res.status(200).json({message: "로그인 성공"});
+    const token = await usersService.login(password, name);
+    if (token){
+        return res.status(200).json({message: "로그인 성공", token});
     }
     else {
         return res.status(202).json({message: "아이디 또는 비밀번호가 올바르지 않습니다"});
     }
+
+    return res.status(200).json({message: "로그인 성공", token});
 };
+
+const logout = () => {
+
+}
 
 
 const deleteUser = (req, res) => {
