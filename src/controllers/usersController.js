@@ -26,7 +26,6 @@ const login = async (req, res) => {
     if (!password || !name){
         return res.status(400).json({message: "id와 비밀번호는 필수 항목입니다"});
     }
-
     const token = await usersService.login(password, name);
     if (token){
         return res.status(200).json({message: "로그인 성공", token});
@@ -38,18 +37,11 @@ const login = async (req, res) => {
     return res.status(200).json({message: "로그인 성공", token});
 };
 
-const logout = () => {
-
-}
-
-
 const deleteUser = (req, res) => {
     const {password, name} = req.body;
-
-
+    usersService.deleteUser(password, name);
+    
 };
-
-
 
 export default {
     newUser: newUser,

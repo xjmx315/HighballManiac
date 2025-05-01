@@ -32,4 +32,4 @@ export default {
     getIdByName: getIdByName,
     getPasswordById: getPasswordById,
     addUser: addUser
-}
+};

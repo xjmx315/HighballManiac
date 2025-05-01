@@ -2,6 +2,9 @@
 import users from '../models/users.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const getIdByName = async (name) => {
     return await users.getIdByName(name);
@@ -36,13 +39,19 @@ const login = async (password, name) => {
         return false;
     }
 
+    //토큰 발급
     const token = jwt.sign(
         {userName: name, userId: id},
-        'jwt_secret',
+        dotenv.env.JWT_KEY,
         {expiresIn: "1h"}
     );
 
     return token;
+};
+
+
+const deleteUser = (password, name) => {
+    
 };
 
 export default {
