@@ -38,7 +38,9 @@ const login = async (req, res) => {
 
 const deleteUser = (req, res) => {
     const {password} = req.body;
-    usersService.deleteUser(password, name);
+    if (!password) {
+        return res.status(401).json({ error: '비밀번호가 필요합니다. ' });
+    }
 
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -47,6 +49,7 @@ const deleteUser = (req, res) => {
 
     const token = authHeader.split(' ')[1];
     
+    usersService.deleteUser(password, token);
 };
 
 export default {

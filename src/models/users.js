@@ -28,8 +28,17 @@ const addUser = async (email, hashedPassword, name) => {
     return result;
 };
 
+const deleteUser = async (userId) => {
+    const [result] = await db.execute(
+        'DELETE FROM users WHERE id = ?',
+        [userId]
+    );
+    return result;
+};
+
 export default {
     getIdByName: getIdByName,
     getPasswordById: getPasswordById,
-    addUser: addUser
+    addUser: addUser,
+    deleteUser: deleteUser
 };

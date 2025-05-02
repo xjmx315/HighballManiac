@@ -57,10 +57,10 @@ const getToken = (userName, userId) => {
 };
 
 const authUser = (token) => {
-    //유저 인증: 토큰을 받아서 유효하다면 유저 아이디를 반환. 
-    //유효하지 않으면 -1을 반환. 
+    //유저 인증: 토큰을 받아서 유효하다면 유저 아이디와 이름을을 반환. 
+    //유효하지 않으면 false을 반환. 
     if (!token) {
-        return -1;
+        return false;
     }
 
     try{
@@ -69,16 +69,41 @@ const authUser = (token) => {
     }
     catch (e) {
         console.log("token error: ", e);
-        return -1;
+        return false;
     }
 };
 
-const deleteUser = (password, name) => {
-    
+const deleteUser = async (password, token) => {
+    //토큰 유효성 확인
+    const payload = authUser(token);
+    if (!payload) {
+        return false;
+    }
+    console.log("payload: ", payload);
+
+    //비밀번호 확인
+    const isCorrect = await login(password, payload.name);
+    console.log("isCorrest: ", isCorrect);
+
+    //아이디 삭제
+    if (isCorrect === payload.id){
+        try {
+            users.deleteUser(isCorrect);
+            return true;
+        }
+        catch (e) {
+            console.log("error: ", e);
+            return false;
+        }
+    }
+    return false;
 };
 
 export default {
     getIdByName: getIdByName,
     addUser: addUser,
-    login: login
+    login: login,
+    getToken: getToken,
+    authUser: addUser,
+    deleteUser: deleteUser
 }
