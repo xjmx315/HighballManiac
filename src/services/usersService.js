@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const JWT_KEY = dotenv.env.JWT_KEY || 'noJWT_KEY';
+const JWT_KEY = process.env.JWT_KEY || 'noJWT_KEY';
 
 const getIdByName = async (name) => {
     return await users.getIdByName(name);
@@ -24,10 +24,16 @@ const login = async (password, name) => {
     //비밀번호와 이름을 검증해서 맞으면 아이디를 반환. 
     //아니면 false 반환
 
+    //입력값 검증
+    if (!name || !password) {
+        console.log("login error: 이름 또는 비밀번호가 전달되지 않았습니다. ")
+        return false;
+    }
+
     //유저 검색
     const ids = await users.getIdByName(name);
     if (ids.length === 0){
-        return false;
+        return false; //해당 이름의 유저 없음. 
     }
     const id = ids[0].id;
 
@@ -54,6 +60,7 @@ const getToken = (userName, userId) => {
         JWT_KEY,
         {expiresIn: "1h"}
     );
+    return token;
 };
 
 const authUser = (token) => {
@@ -82,7 +89,7 @@ const deleteUser = async (password, token) => {
     console.log("payload: ", payload);
 
     //비밀번호 확인
-    const isCorrect = await login(password, payload.name);
+    const userId = await login(password, payload.userName);
     console.log("isCorrest: ", isCorrect);
 
     //아이디 삭제

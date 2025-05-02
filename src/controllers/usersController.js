@@ -49,7 +49,13 @@ const deleteUser = (req, res) => {
 
     const token = authHeader.split(' ')[1];
     
-    usersService.deleteUser(password, token);
+    const isSuccess = usersService.deleteUser(password, token);
+    if (isSuccess) {
+        res.status(201).json({ message: '유저를 삭제했습니다. '});
+    }
+    else {
+        res.status(500).json({ message: '삭제에 실패했습니다. '});
+    }
 };
 
 export default {
