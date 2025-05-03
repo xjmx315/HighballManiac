@@ -46,7 +46,6 @@ const deleteUser = (req, res) => {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: '인증 토큰이 필요합니다.' });
     }
-
     const token = authHeader.split(' ')[1];
     
     const isSuccess = usersService.deleteUser(password, token);
@@ -58,8 +57,33 @@ const deleteUser = (req, res) => {
     }
 };
 
+const getProfile = (req, res) => {
+    //유저의 이름으로 프로필 정보를 get
+    
+};
+
+const tokenCheck = (req, res) => {
+    //토큰 포함 여부 check
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: '인증 토큰이 필요합니다.' });
+    }
+    const token = authHeader.split(' ')[1];
+
+    //토큰 유효성 검사
+    const checked = usersService.authUser(token);
+    if (checked) {
+        return res.status(200).json({ message: 'ok' });
+    }
+    else {
+        return res.status(401).json({ error: 'rejected' });
+    }
+};
+
 export default {
     newUser: newUser,
     login: login,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+    getProfile: getProfile,
+    tokenCheck: tokenCheck
 };

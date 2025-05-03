@@ -64,7 +64,7 @@ const getToken = (userName, userId) => {
 };
 
 const authUser = (token) => {
-    //유저 인증: 토큰을 받아서 유효하다면 유저 아이디와 이름을을 반환. 
+    //유저 인증: 토큰을 받아서 유효하다면 유저 아이디와 이름을 반환. 
     //유효하지 않으면 false을 반환. 
     if (!token) {
         return false;
@@ -106,11 +106,17 @@ const deleteUser = async (password, token) => {
     return false;
 };
 
+const myProfile = (token) => {
+    //토큰이 유효하면 해당 유저의 정보를 반환환
+};
+
+
 export default {
     getIdByName: getIdByName,
     addUser: addUser,
     login: login,
     getToken: getToken,
     authUser: addUser,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+    myProfile: myProfile
 }
