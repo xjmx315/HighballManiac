@@ -32,7 +32,7 @@ const login = async (req, res) => {
         return res.status(200).json({message: "로그인 성공", token});
     }
     else {
-        return res.status(202).json({message: "아이디 또는 비밀번호가 올바르지 않습니다"});
+        return res.status(401).json({message: "아이디 또는 비밀번호가 올바르지 않습니다"});
     }
 };
 
