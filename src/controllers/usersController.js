@@ -58,7 +58,7 @@ const deleteUser = (req, res) => {
 };
 
 const getProfile = async (req, res) => {
-    //프로필에 표시되어야 할 정보: 이름, 가입일, 레시피 리스트
+    //프로필에 표시되어야 할 정보: 이름, 가입일, TODO: 레시피 리스트
 
     //유저의 이름으로 프로필 정보를 get
     const targetName = req.qurey.name;
