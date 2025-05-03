@@ -73,7 +73,7 @@ const tokenCheck = (req, res) => {
     //토큰 유효성 검사
     const checked = usersService.authUser(token);
     if (checked) {
-        return res.status(200).json({ message: 'ok' });
+        return res.status(200).json({ message: 'ok', userName: checked.userName, userId: checked.userId });
     }
     else {
         return res.status(401).json({ error: 'rejected' });
