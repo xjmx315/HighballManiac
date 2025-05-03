@@ -11,6 +11,10 @@ const getIdByName = async (name) => {
     return await users.getIdByName(name);
 };
 
+const getCreatedDateById = async (id) => {
+    return await users.getCreatedDateById(id);
+};
+
 const addUser = async (userData) => {
     const {email, password, name} = userData;
     
@@ -113,6 +117,7 @@ const myProfile = (token) => {
 
 export default {
     getIdByName: getIdByName,
+    getCreatedDateById: getCreatedDateById,
     addUser: addUser,
     login: login,
     getToken: getToken,

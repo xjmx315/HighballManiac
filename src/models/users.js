@@ -19,6 +19,13 @@ const getPasswordById = async (id) => {
     return password;
 };
 
+const getCreatedDateById = async (id) => {
+    const [date] = await db.execute(
+        'SELECT created_at FROM users WHERE id = ?',
+        [id]
+    );
+    return date;
+};
 
 const addUser = async (email, hashedPassword, name) => {
     const [result] = await db.execute(
@@ -39,6 +46,7 @@ const deleteUser = async (userId) => {
 export default {
     getIdByName: getIdByName,
     getPasswordById: getPasswordById,
+    getCreatedDateById: getCreatedDateById,
     addUser: addUser,
     deleteUser: deleteUser
 };
