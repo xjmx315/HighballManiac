@@ -121,7 +121,7 @@ export default {
     addUser: addUser,
     login: login,
     getToken: getToken,
-    authUser: addUser,
+    authUser: authUser,
     deleteUser: deleteUser,
     myProfile: myProfile
 }
