@@ -61,16 +61,16 @@ const getProfile = async (req, res) => {
     //프로필에 표시되어야 할 정보: 이름, 가입일, TODO: 레시피 리스트
 
     //유저의 이름으로 프로필 정보를 get
-    const targetName = req.qurey.name;
+    const targetName = req.query.name;
     if (!targetName) {
         return res.status(400).json({ error: "검색어가 없습니다. "});
     }
     
-    const userId = await usersService.getIdByName(targetName);
-    if (!userId) {
+    const ids = await usersService.getIdByName(targetName);
+    if (!ids) {
         return res.status(400).json({ error: "존재하지 않는 유저 입니다. " });
     }
-
+    const userId = ids[0].id;
     const created_at = await usersService.getCreatedDateById(userId);
 
     return res.status(200).json({ userName: targetName, userId, created_at })

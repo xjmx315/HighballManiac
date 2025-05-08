@@ -12,7 +12,8 @@ const getIdByName = async (name) => {
 };
 
 const getCreatedDateById = async (id) => {
-    return await users.getCreatedDateById(id);
+    const date = await users.getCreatedDateById(id);
+    return date[0].created_at;
 };
 
 const addUser = async (userData) => {
@@ -110,11 +111,6 @@ const deleteUser = async (password, token) => {
     return false;
 };
 
-const myProfile = (token) => {
-    //토큰이 유효하면 해당 유저의 정보를 반환환
-};
-
-
 export default {
     getIdByName: getIdByName,
     getCreatedDateById: getCreatedDateById,
@@ -123,5 +119,4 @@ export default {
     getToken: getToken,
     authUser: authUser,
     deleteUser: deleteUser,
-    myProfile: myProfile
 }
