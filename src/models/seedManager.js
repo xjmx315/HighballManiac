@@ -2,6 +2,10 @@
 
 import db from './db.js';
 
+const checkDB = async () => {
+    //db에 필요한 테이블이 모두 있는지 확인한다. 
+};
+
 const initDB = async () => {
     //sql 파일을 가지고 있다가 그걸 불러와서 실행하는 것이 좋지 않을까
     //users 테이블 생성

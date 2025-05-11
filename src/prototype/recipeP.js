@@ -1,6 +1,4 @@
-//recipeModel.js
-
-import db from './db.js';
+//recipeP.js
 
 /* 레시피 데이터 테이블 구조
 레시피:
@@ -20,6 +18,13 @@ id - 레시피의 pk. int
 생성일 - . date
 */
 
-const newRecipe = () => {
-
+const getItems = (recipeStepDs) => {
+    //TODO: item id 중복 없이 리스트 만들어서 리턴하기. 
 };
+
+const getRecipeD = (id, name, picUrl, recipeStepDs, alc, creat_at, creater, tags) => {
+    const items = getItems(recipeStepDs);
+    return {id, name, picUrl, items, recipeStepDs, creat_at, alc, creater, tags};
+};
+
+export default getRecipeD;
