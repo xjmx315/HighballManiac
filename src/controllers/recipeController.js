@@ -3,7 +3,11 @@ import recipeService from '../services/recipeService.js';
 
 
 const newRecipe = (req, res) => {
-    
+    const recipe = recipeService.newRecipe(req.body);
+    if (!recipe) {
+        return res.status(400).json({message: "레시피 생성에 실패했습니다. "});
+    }
+    res.status(201).json(recipe);
 };
 
 const getPopualer = (req, res) => {
@@ -39,4 +43,4 @@ export default {
     getById: getById,
     searchRecipeByName: searchRecipeByName,
     getRecipeByCategory: getRecipeByCategory
-}
+};

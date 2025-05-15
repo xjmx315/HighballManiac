@@ -20,6 +20,11 @@ id - 레시피의 pk. int
 
 const getItems = (recipeStepDs) => {
     //TODO: item id 중복 없이 리스트 만들어서 리턴하기. 
+    const items = [];
+    for (const step of recipeStepDs) {
+        items.push(...step.items);
+    }
+    return items;
 };
 
 const getRecipeD = (id, name, picUrl, recipeStepDs, alc, creat_at, creater, tags) => {
