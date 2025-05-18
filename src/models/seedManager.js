@@ -12,7 +12,7 @@ const initDB = async () => {
     db.query('create table users (id int auto_increment primary key, email varchar(127), password varchar(225) not null, name varchar(127) not null unique, created_at datetime not null);');
 
     //items 태이블 생성
-    db.query('create table items (id int auto_increment primary key, name varchar(100), description varchar(100), image varchar(100));');
+    db.query('create table items (id int auto_increment primary key, name varchar(127), description varchar(225), image varchar(225));');
 
 };
 
