@@ -17,7 +17,7 @@ const executeSqlFile = async (filePath, connection) => {
     }
 };
 
-const checkDatabase = async (connection) => {
+const checkDB = async (connection) => {
     try {
       const [rows] = await connection.query(`
         SELECT table_name 
