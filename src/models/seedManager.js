@@ -2,8 +2,41 @@
 
 import db from './db.js';
 
-const checkDB = async () => {
-    //db에 필요한 테이블이 모두 있는지 확인한다. 
+const executeSqlFile = async (filePath, connection) => {
+    try {
+      const sql = await fs.readFile(filePath, 'utf8');
+      // 여러 쿼리를 세미콜론으로 분리
+      const queries = sql.split(';').filter((query) => query.trim());
+      for (const query of queries) {
+        await connection.query(query);
+      }
+      console.log(`Successfully executed ${path.basename(filePath)}`);
+    } catch (error) {
+      console.error(`Error executing ${path.basename(filePath)}:`, error.message);
+      throw error;
+    }
+};
+
+const checkDatabase = async (connection) => {
+    try {
+      const [rows] = await connection.query(`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = ? 
+        AND table_name IN ('users', 'posts')
+      `, [dbConfig.database]);//이거 없음
+  
+      const existingTables = rows.map((row) => row.table_name);
+      console.log('Existing tables:', existingTables);
+  
+      return {
+        hasUsersTable: existingTables.includes('users'),
+        hasPostsTable: existingTables.includes('posts'),
+      };
+    } catch (error) {
+      console.error('Error checking database state:', error.message);
+      throw error;
+    }
 };
 
 const initDB = async () => {
