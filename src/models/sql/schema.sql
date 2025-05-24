@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS items (
     id INT AUTO_INCREMENT PRIMARY KEY, 
-    name VARCHAR(127), 
+    name VARCHAR(127) UNIQUE, 
     description VARCHAR(225), 
     image VARCHAR(225)
 );
@@ -21,6 +21,9 @@ CREATE TABLE IF NOT EXISTS recipes (
     image VARCHAR(225),
     alcohol_percentage FLOAT,
     created_at DATETIME,
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX (alcohol_percentage)
 );
 
 CREATE TABLE IF NOT EXISTS tags (
@@ -31,7 +34,10 @@ CREATE TABLE IF NOT EXISTS tags (
 CREATE TABLE IF NOT EXISTS recipe_tags (
     recipe_id INT,
     tag_id INT,
-    PRIMARY KEY (recipe_id, tag_id)
+    PRIMARY KEY (recipe_id, tag_id),
+
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS steps (
@@ -39,15 +45,16 @@ CREATE TABLE IF NOT EXISTS steps (
     recipe_id INT,
     description VARCHAR(511),
     image VARCHAR(225),
-    step_number INT
-);
+    step_number INT,
 
-CREATE TABLE IF NOT EXISTS steps_items (
-    setp_id INT,
-    item_id INT
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+    INDEX (recipe_id, step_number)
 );
 
 CREATE TABLE IF NOT EXISTS recipes_items (
     recipe_id INT, 
     item_id INT
+
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
 );
