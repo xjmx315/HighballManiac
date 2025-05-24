@@ -1,53 +1,53 @@
 CREATE TABLE IF NOT EXISTS users (
-    id int auto_increment primary key, 
-    email varchar(127), 
-    password varchar(225) not null, 
-    name varchar(127) not null unique, 
-    created_at datetime not null
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    email VARCHAR(127), 
+    password VARCHAR(225) NOT NULL, 
+    name VARCHAR(127) NOT NULL UNIQUE, 
+    created_at DATETIME NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS items (
-    id int auto_increment primary key, 
-    name varchar(127), 
-    description varchar(225), 
-    image varchar(225)
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    name VARCHAR(127), 
+    description VARCHAR(225), 
+    image VARCHAR(225)
 );
 
 CREATE TABLE IF NOT EXISTS recipes (
-    id int auto_increment primary key,
-    user_id int,
-    name varchar(127),
-    description varchar(511),
-    image varchar(225),
-    alcohol_percentage float,
-    created_at datetime,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    name VARCHAR(127),
+    description VARCHAR(511),
+    image VARCHAR(225),
+    alcohol_percentage FLOAT,
+    created_at DATETIME,
 );
 
 CREATE TABLE IF NOT EXISTS tags (
-    id int auto_increment primary key,
-    name varchar(64)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(64)
 );
 
 CREATE TABLE IF NOT EXISTS recipe_tags (
-    recipe_id int,
-    tag_id int,
-    primary key (recipe_id, tag_id)
+    recipe_id INT,
+    tag_id INT,
+    PRIMARY KEY (recipe_id, tag_id)
 );
 
 CREATE TABLE IF NOT EXISTS steps (
-    id int auto_increment primary key,
-    recipe_id int,
-    description varchar(511),
-    image varchar(225),
-    step_number int
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    recipe_id INT,
+    description VARCHAR(511),
+    image VARCHAR(225),
+    step_number INT
 );
 
 CREATE TABLE IF NOT EXISTS steps_items (
-    setp_id int,
-    item_id int
+    setp_id INT,
+    item_id INT
 );
 
 CREATE TABLE IF NOT EXISTS recipes_items (
-    recipe_id int, 
-    item_id int
+    recipe_id INT, 
+    item_id INT
 );
