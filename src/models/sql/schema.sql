@@ -23,38 +23,39 @@ CREATE TABLE IF NOT EXISTS recipes (
     created_at DATETIME,
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX (alcohol_percentage)
 );
+
+CREATE INDEX idx_recipes_alcohol_percentage ON recipes (alcohol_percentage);
 
 CREATE TABLE IF NOT EXISTS tags (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(64)
+    name VARCHAR(63) UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS recipe_tags (
     recipe_id INT,
     tag_id INT,
-    PRIMARY KEY (recipe_id, tag_id),
 
+    PRIMARY KEY (recipe_id, tag_id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS steps (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     recipe_id INT,
     description VARCHAR(511),
     image VARCHAR(225),
     step_number INT,
 
+    PRIMARY KEY (recipe_id, step_number),
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
-    INDEX (recipe_id, step_number)
 );
 
 CREATE TABLE IF NOT EXISTS recipes_items (
     recipe_id INT, 
     item_id INT
 
+    PRIMARY KEY (recipe_id, item_id),
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
 );
