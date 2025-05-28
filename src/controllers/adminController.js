@@ -20,7 +20,7 @@ const initDB = async (req, res) => {
     }
     catch (e) {
         console.log("error: DB초기화 실패 - ", e);
-        throw e;
+        return res.status(500).json({ error: "DB 초기화 실패", details: e.message });
     }
 
     return res.status(200).json({ messge: "DB 초기화 완료" });

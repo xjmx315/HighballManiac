@@ -1,10 +1,12 @@
 //seedManager.js
 
 import db from './db.js';
+import {readFile} from 'fs/promises';
+import path from 'path';
 
 const executeSqlFile = async (filePath, connection) => {
   try {
-    const sql = await fs.readFile(filePath, 'utf8');
+    const sql = await readFile(filePath, 'utf8');
     // 여러 쿼리를 세미콜론으로 분리
     const queries = sql.split(';').filter((query) => query.trim());
     for (const query of queries) {
@@ -18,9 +20,9 @@ const executeSqlFile = async (filePath, connection) => {
 };
 
 const initDB = async () => {
-  await executeSqlFile('../sql/clear.sql', db);
-  await executeSqlFile('../sql/schema.sql', db);
-  await executeSqlFile('../sql/seed.sql', db);
+  await executeSqlFile('./src/models/sql/clear.sql', db);
+  await executeSqlFile('./src/models/sql/schema.sql', db);
+  await executeSqlFile('./src/models/sql/seed.sql', db);
 };
 
 export default {
