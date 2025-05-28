@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS recipes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
 );
 
-CREATE INDEX idx_recipes_alcohol_percentage ON recipes (alcohol_percentage);
+CREATE INDEX idx_recipes_alcohol_percentage ON recipes(alcohol_percentage);
 
 CREATE TABLE IF NOT EXISTS tags (
     id INT AUTO_INCREMENT PRIMARY KEY,

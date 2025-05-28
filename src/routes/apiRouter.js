@@ -5,6 +5,7 @@ import express from 'express';
 import itemController from '../controllers/itemController.js';
 import usersController from '../controllers/usersController.js';
 import recipeController from '../controllers/recipeController.js';
+import adminController from '../controllers/adminController.js';
 
 const router = express.Router();
 
@@ -33,5 +34,9 @@ router.get('/recipe/random', recipeController.getRandom);
 router.get('/recipe', recipeController.getById);
 router.get('/recipe/search', recipeController.searchRecipeByName);
 router.get('/recipe/category', recipeController.getRecipeByCategory);
+
+
+//admin--------
+router.get('/admin/db/init', adminController.initDB);
 
 export default router;
