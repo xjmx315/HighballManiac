@@ -67,7 +67,7 @@ const getProfile = async (req, res) => {
     }
     
     const ids = await usersService.getIdByName(targetName);
-    if (!ids) {
+    if (ids.length === 0) {
         return res.status(400).json({ error: "존재하지 않는 유저 입니다. " });
     }
     const userId = ids[0].id;
