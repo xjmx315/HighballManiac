@@ -1,4 +1,4 @@
-# HighballManiac 
+# HighballManiac
 
 ## Description
 
@@ -12,3 +12,5 @@
 ## Base
 * express.js
 * dotenv
+*mysql2/promiss
+
