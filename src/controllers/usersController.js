@@ -94,7 +94,7 @@ const tokenCheck = async (req, res) => {
     //토큰 유효성 검사
     const checked = await usersService.authUser(token);
     if (checked) {
-        return res.status(200).json(new CommonResponse().setData({ message: 'ok', userName: checked.userName, userId: checked.userId }));
+        return res.status(200).json(new CommonResponse().setData({ userName: checked.userName, userId: checked.userId }));
     }
     else {
         return res.status(401).json(new CommonResponse(false, 401, 'rejected'));
