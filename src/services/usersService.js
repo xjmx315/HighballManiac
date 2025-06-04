@@ -8,12 +8,21 @@ dotenv.config();
 const JWT_KEY = process.env.JWT_KEY || 'noJWT_KEY';
 
 const getIdByName = async (name) => {
+    //유저 존재: [ { id: 4 } ]
+    //유저 x: []
     return await users.getIdByName(name);
 };
 
 const getCreatedDateById = async (id) => {
-    const date = await users.getCreatedDateById(id);
-    return date[0].created_at;
+    //정상: 2025-05-28T16:43:17.000Z
+    try {
+        const date = await users.getCreatedDateById(id);
+        return date[0].created_at;
+    }
+    catch (e) {
+        console.log("getCreatedDateById Error: ", e);
+        return "error";
+    }
 };
 
 const addUser = async (userData) => {
@@ -69,14 +78,15 @@ const getToken = (userName, userId) => {
 };
 
 const authUser = async (token) => {
-    //유저 인증: 토큰을 받아서 유효하다면 { userName: 'ddd', userId: 3, iat: 1749024408, exp: 1749028008 } 반환. 
-    //유효하지 않으면 false을 반환. 
+    //인증 성공: { userName: 'ddd', userId: 3, iat: 1749024408, exp: 1749028008 }
+    //유효x: false 
     if (!token) {
         return false;
     }
 
     try{
         const decoded = jwt.verify(token, JWT_KEY);
+        //유저가 실존하는지 검증
         const isRealUser = await getIdByName(decoded.userName);
         if (isRealUser.length === 1 && isRealUser[0].id === decoded.userId){
             return decoded;

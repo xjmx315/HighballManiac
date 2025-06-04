@@ -78,6 +78,7 @@ const getProfile = async (req, res) => {
     }
     const userId = ids[0].id;
     const created_at = await usersService.getCreatedDateById(userId);
+    console.log(created_at);
 
     return res.status(200).json(new CommonResponse().setData({ userName: targetName, userId, created_at }))
 };
