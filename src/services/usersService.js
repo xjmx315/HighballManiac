@@ -68,8 +68,8 @@ const getToken = (userName, userId) => {
     return token;
 };
 
-const authUser = (token) => {
-    //유저 인증: 토큰을 받아서 유효하다면 유저 아이디와 이름을 반환. 
+const authUser = async (token) => {
+    //유저 인증: 토큰을 받아서 유효하다면 { userName: 'ddd', userId: 3, iat: 1749024408, exp: 1749028008 } 반환. 
     //유효하지 않으면 false을 반환. 
     if (!token) {
         return false;
@@ -77,7 +77,11 @@ const authUser = (token) => {
 
     try{
         const decoded = jwt.verify(token, JWT_KEY);
-        return decoded;
+        const isRealUser = await getIdByName(decoded.userName);
+        if (isRealUser.length === 1 && isRealUser[0].id === decoded.userId){
+            return decoded;
+        }
+        return false;
     }
     catch (e) {
         console.log("token error: ", e);
@@ -86,29 +90,31 @@ const authUser = (token) => {
 };
 
 const deleteUser = async (password, token) => {
+    //{isSucceed, message 반환}
+
     //토큰 유효성 확인
-    const payload = authUser(token);
+    const payload = await authUser(token);
     if (!payload) {
-        return false;
+        return {isSucceed: false, message: "토큰이 유효하지 않습니다. "};
     }
-    console.log("payload: ", payload);
+    //console.log("payload: ", payload);
 
     //비밀번호 확인
     const userId = await login(password, payload.userName);
-    console.log("isCorrest: ", isCorrect);
+    //console.log("login: ", userId);
 
     //아이디 삭제
-    if (isCorrect === payload.id){
+    if (userId && userId === payload.userId){
         try {
-            users.deleteUser(isCorrect);
-            return true;
+            users.deleteUser(userId);
+            return {isSucceed: true, message: "Succeed"};
         }
         catch (e) {
             console.log("error: ", e);
-            return false;
+            return {isSucceed: false, message: 0};
         }
     }
-    return false;
+    return {isSucceed: false, message: "비밀번호가 올바르지 않습니다. "};
 };
 
 export default {

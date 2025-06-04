@@ -23,7 +23,6 @@ router.get('/user', usersController.getProfile);
 router.get('/user/tokenCheck', usersController.tokenCheck);
 router.delete('/user', usersController.deleteUser);
 //계정 정보는 db에서 삭제되나 해당 유저가 올린 레시피도 삭제되게 해야함. 
-//유저가 삭제된 이후에도 토큰이 유효하기 때문에 로그인이 성공할 수 있음. 
 
 
 //Recipe--------

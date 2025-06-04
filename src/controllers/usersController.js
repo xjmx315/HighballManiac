@@ -37,7 +37,7 @@ const login = async (req, res) => {
     }
 };
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
     const {password} = req.body;
     if (!password) {
         return res.status(401).json(new CommonResponse(false, 401, '비밀번호가 필요합니다. '));
@@ -49,12 +49,17 @@ const deleteUser = (req, res) => {
     }
     const token = authHeader.split(' ')[1];
     
-    const isSuccess = usersService.deleteUser(password, token);
-    if (isSuccess) {
+    const { isSucceed, message } = await usersService.deleteUser(password, token);
+    if (isSucceed) {
         res.status(201).json(new CommonResponse().setCode(201));
     }
     else {
-        res.status(500).json(new CommonResponse(false, 500, '삭제에 실패했습니다. '));
+        if (message === 0){
+            res.status(500).json(new CommonResponse(false, 500, "알 수 없는 에러가 발생했습니다. "));
+        }
+        else {
+        res.status(400).json(new CommonResponse(false, 400, message));
+        }
     }
 };
 
@@ -77,7 +82,7 @@ const getProfile = async (req, res) => {
     return res.status(200).json(new CommonResponse().setData({ userName: targetName, userId, created_at }))
 };
 
-const tokenCheck = (req, res) => {
+const tokenCheck = async (req, res) => {
     //토큰 포함 여부 check
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -86,7 +91,7 @@ const tokenCheck = (req, res) => {
     const token = authHeader.split(' ')[1];
 
     //토큰 유효성 검사
-    const checked = usersService.authUser(token);
+    const checked = await usersService.authUser(token);
     if (checked) {
         return res.status(200).json(new CommonResponse().setData({ message: 'ok', userName: checked.userName, userId: checked.userId }));
     }
