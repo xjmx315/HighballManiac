@@ -5,6 +5,7 @@ import seedManager from "../models/seedManager.js";
 import CommonResponse from "../prototype/commonResponse.js";
 
 const initDB = async (req, res) => {
+    console.log(req.body);
     const {adminPassword} = req.body;
     if (!adminPassword) {
         return res.status(401).json(new CommonResponse(false, 401, "관리자 비밀번호를 포함해야 합니다. "));
