@@ -1,20 +1,7 @@
 //adminAPI.test.js
 
-//mocking
-//import { afterAll, expect, jest } from '@jest/globals';
-
-/*
-jest.mock('../../src/services/usersService.js', () => ({
-    __esModule: true,
-    default: {
-        login: jest.fn()
-    }
-}));
-*/
-
 jest.mock('../../src/services/usersService.js');
 
-//import after mocking
 import request from 'supertest';
 import app from '../../src/app.js';
 import db from '../../src/models/db.js';
@@ -32,12 +19,6 @@ describe('/api/admin/db/init', () => {
         const response = await request(app)
             .get('/api/admin/db/init')
             .send({ adminPassword: 'correctPassword' });
-
-        // 모킹 확인을 위한 로그 추가
-        console.log('mockLogin 호출 횟수:', usersService.login.mock.calls.length);
-        console.log('mockLogin 호출 인자:', usersService.login.mock.calls[0]);
-        console.log('mockLogin 반환값:', await usersService.login.mock.results[0].value);
-        console.log('response body:', response.body);
     
         //상태 코드
         expect(response.status).toBe(200);
@@ -52,18 +33,38 @@ describe('/api/admin/db/init', () => {
     });
 
     test('get 올바르지 않은은 admin 비밀번호를 입력했을때', async () => {
-        //mockLogin.mockResolvedValue(false);
         usersService.login.mockResolvedValue(false);
 
         const response = await request(app)
             .get('/api/admin/db/init')
             .send({ adminPassword: 'wrrongPassword' });
         console.log(response.body);
+
+        //상태 코드
+        expect(response.status).toBe(401);
+
+        //body
+        expect(response.body).toEqual({
+            ok: false,
+            code: 401,
+            message: '비밀번호가 올바르지 않습니다. ', 
+            data: {}
+        });
     });
 
     test('비밀번호를 포함하지 않았을때', async () => {
         const response = await request(app).get('/api/admin/db/init').send();
-        console.log(response.body);
+        
+        //상태 코드
+        expect(response.status).toBe(401);
+
+        //body
+        expect(response.body).toEqual({
+            ok: false,
+            code: 401,
+            message: '관리자 비밀번호를 포함해야 합니다. ', 
+            data: {}
+        });
     });
 
     afterAll(async () => {
