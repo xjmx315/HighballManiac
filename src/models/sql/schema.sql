@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS recipes (
 
 CREATE INDEX idx_recipes_alcohol_percentage ON recipes(alcohol_percentage);
 
-CREATE TABLE IF EXISTS comments (
+CREATE TABLE IF NOT EXISTS comments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     recipe_id INT,
     user_id INT,

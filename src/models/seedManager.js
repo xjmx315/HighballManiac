@@ -9,7 +9,13 @@ const executeSqlFile = async (filePath, connection) => {
     const sql = await readFile(filePath, 'utf8');
     const queries = sql.split(';').filter((query) => query.trim());
     for (const query of queries) {
-      await connection.query(query);
+      try {
+        await connection.query(query);
+      }
+      catch (e) {
+        console.log("SQL query error: ", query);
+        throw e;
+      }
     }
     console.log(`Successfully executed ${path.basename(filePath)}`);
   } catch (error) {
