@@ -13,6 +13,12 @@ const router = express.Router();
 //Item--------
 router.get('/item', itemController.getItems);
 router.get('/item/search', itemController.searchItemByName);
+router.push('/item', itemController.newItem);
+
+//Ingredient--------
+router.get('/ingredient/search', ingredientController.searchIngredientByName);
+router.push('/ingredient', ingredientController.newIngredient);
+router.get('/ingredient', ingredientController.getById);
 
 
 //User--------
@@ -33,6 +39,7 @@ router.get('/recipe/random', recipeController.getRandom);
 router.get('/recipe', recipeController.getById);
 router.get('/recipe/search', recipeController.searchRecipeByName);
 router.get('/recipe/category', recipeController.getRecipeByCategory);
+router.get('/recipe/including', recipeController.searchByIngredient);
 
 
 //admin--------
