@@ -44,5 +44,7 @@ router.get('/recipe/category', recipeController.getRecipeByCategory);
 
 //admin--------
 router.get('/admin/db/init', adminController.initDB);
+router.get('/admin/db/update/item', adminController.updateItems);
+router.get('/admin/db/export/item', adminController.exportItems);
 
 export default router;
