@@ -5,6 +5,7 @@ import seedManager from "../models/seedManager.js";
 import multer from "multer";
 import CommonResponse from "../prototype/commonResponse.js";
 import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 
@@ -53,9 +54,18 @@ const updateIngredients = async (req, res) => {
 };
 
 const exportIngredients = async (req, res) => {
-    seedManager._exportTabletoCsv("Ingredients", csvSeedPath);
+    const filePath = await seedManager._exportTabletoCsv("Ingredients", csvSeedPath);
 
-    return res.status(200).json(new CommonResponse());
+    if (filePath){
+        return res
+            .type('text/csv')
+            .download(path.join(csvSeedPath, filePath));
+    }
+    else {
+        return res
+            .status(500)
+            .json(new CommonResponse(false, 500, 'csv파일 내보내기에 실패했습니다. '));
+    }
 };
 
 export default {

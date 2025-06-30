@@ -50,6 +50,7 @@ const _exportTabletoCsv = async (tableName, filePath) => {
   }
   catch (e) {
     console.log(`error on _exportTabletoCsv ${e}`);
+    return '';
   }
 };
 
