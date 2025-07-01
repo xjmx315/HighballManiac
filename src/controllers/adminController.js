@@ -44,13 +44,24 @@ const updateItems = async (req, res) => {
 };
 
 const exportItems = async (req, res) => {
-    seedManager._exportTabletoCsv("Items", csvSeedPath);
+    const filePath = await seedManager._exportTabletoCsv("Items", csvSeedPath);
 
-    return res.status(200).json(new CommonResponse());
+    if (filePath){
+        return res
+            .type('text/csv')
+            .download(path.join(csvSeedPath, filePath));
+    }
+    else {
+        return res
+            .status(500)
+            .json(new CommonResponse(false, 500, 'csv파일 내보내기에 실패했습니다. '));
+    }
 };
 
 const updateIngredients = async (req, res) => {
+    seedManager._updateTablefromCsv("Items", csvSeedPath);
 
+    return res.status(200).json(new CommonResponse());
 };
 
 const exportIngredients = async (req, res) => {

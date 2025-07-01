@@ -26,7 +26,7 @@ const _updateTablefromCsv = async (tableName, filePath) => {
 };
 
 const _exportTabletoCsv = async (tableName, filePath) => {
-  //테이블에 있는 데이터를 csv 파일로 추출한다. csv file pqth를 리턴한다. 
+  //테이블에 있는 데이터를 csv 파일로 추출한다. csv file path를 리턴한다. 
   try{
     //csvData 얻기
     const [rows] = await db.query(`SELECT * FROM ${tableName}`);
