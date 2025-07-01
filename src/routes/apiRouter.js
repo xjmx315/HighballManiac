@@ -48,5 +48,6 @@ router.get('/admin/db/update/item', adminController.updateItems);
 router.get('/admin/db/export/item', adminController.exportItems);
 router.get('/admin/db/update/ingredient', adminController.updateIngredients);
 router.get('/admin/db/export/ingredient', adminController.exportIngredients);
+router.get('/admin/db/delete/ingredient', adminController.deleteIngredients);
 
 export default router;

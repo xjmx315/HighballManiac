@@ -13,11 +13,13 @@ const schemaVer = process.env.SCHEMA_VER || '0';
 const _deleteData = async (tableName) => {
   //테이블에 있는 모든 데이터를 지운다. 
   try {
-    const response = await db.execute("TRUNCATE TABLE ?", [tableName]);
-    console.log(`succeed to delete ${tabelName}. return data: ${response} (end)`)
+    const response = await db.execute(`DELETE FROM ${tableName}`);
+    console.log(`succeed to delete ${tableName}. return data: ${response} (end)`);
+    return true;
   }
   catch (e) {
     console.log(`error on _deleteData\nTableName: ${tableName}\n${e}`);
+    return false;
   }
 };
 

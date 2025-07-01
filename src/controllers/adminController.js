@@ -79,10 +79,21 @@ const exportIngredients = async (req, res) => {
     }
 };
 
+const deleteIngredients = async (req, res) => {
+    const succeed = seedManager._deleteData('Ingredients');
+    if (succeed) {
+        res.status(200).json(new CommonResponse());
+    }
+    else {
+        res.status(500).json(new CommonResponse(false, 500, '테이블 삭제에 실패했습니다. '))
+    }
+};
+
 export default {
     initDB,
     updateItems,
     exportItems,
     updateIngredients,
-    exportIngredients
+    exportIngredients,
+    deleteIngredients
 };
