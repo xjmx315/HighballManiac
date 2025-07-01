@@ -66,6 +66,11 @@ const updateIngredients = async (req, res) => {
 
 const exportIngredients = async (req, res) => {
     const filePath = await seedManager._exportTabletoCsv("Ingredients", csvSeedPath);
+    if (filePath === -1) {
+        return res
+            .status(406)
+            .json(new CommonResponse(false, 406, "테이블이 비어있습니다. "));
+    }
 
     if (filePath){
         return res

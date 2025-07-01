@@ -32,6 +32,9 @@ const _exportTabletoCsv = async (tableName, filePath) => {
   try{
     //csvData 얻기
     const [rows] = await db.query(`SELECT * FROM ${tableName}`);
+    if (rows.length === 0){
+      return -1;
+    }
     const csvParser = new Parser();
     const csvData = csvParser.parse(rows);
 
@@ -52,7 +55,7 @@ const _exportTabletoCsv = async (tableName, filePath) => {
   }
   catch (e) {
     console.log(`error on _exportTabletoCsv ${e}`);
-    return '';
+    return 0;
   }
 };
 
