@@ -2,15 +2,13 @@
 
 import usersService from "../services/usersService.js";
 import seedManager from "../models/seedManager.js";
-import multer from "multer";
 import CommonResponse from "../prototype/commonResponse.js";
-import dotenv from "dotenv";
 import path from "path";
 
+import dotenv from "dotenv";
 dotenv.config();
 
-const csvSeedPath = process.env.CSVPATH || 'csvFiles/'
-const upload = multer({ dest: csvSeedPath })
+const csvSeedPath = process.env.CSVPATH || 'csvFiles/';
 
 const initDB = async (req, res) => {
     //테이블을 모두 DROP하고 처음부터 다시 만든다. 스키마 구조 변경시 사용. 
@@ -59,9 +57,19 @@ const exportItems = async (req, res) => {
 };
 
 const updateIngredients = async (req, res) => {
-    seedManager._updateTablefromCsv("Items", csvSeedPath);
+    if (!req.file) {
+        return res.status(400).json(new CommonResponse(false, 400, "파일이 없습니다. "));
+    }
 
-    return res.status(200).json(new CommonResponse());
+    //TODO:파일 인코딩 utf-8로 확인
+    const succeed = await seedManager._updateTablefromCsv("Ingredients", req.file.path);
+
+    if (succeed === 0) {
+        return res.status(200).json(new CommonResponse());
+    }
+    else {
+        return res.status(500).json(new CommonResponse(false, 500, "csv파일 업데이트에 실패했습니다. "));
+    }
 };
 
 const exportIngredients = async (req, res) => {
@@ -100,5 +108,6 @@ export default {
     exportItems,
     updateIngredients,
     exportIngredients,
-    deleteIngredients
+    deleteIngredients,
+    csvSeedPath
 };

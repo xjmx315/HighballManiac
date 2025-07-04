@@ -1,10 +1,12 @@
 //seedManager.js
 
 import db from './db.js';
-import {readFile, writeFile} from 'fs/promises';
+import {readFile} from 'fs/promises';
+import {createReadStream} from 'fs';
 import path from 'path';
 import { Parser } from 'json2csv';
 import dotenv from 'dotenv';
+import csv from 'csv-parser';
 
 dotenv.config();
 
@@ -25,6 +27,23 @@ const _deleteData = async (tableName) => {
 
 const _updateTablefromCsv = async (tableName, filePath) => {
   //csv파일에 있는 데이터를 테이블에 추가한다. 기존 데이터는 유지된다. 
+  console.log(filePath);
+
+  try{
+    createReadStream(filePath, 'utf8')
+      .pipe(csv())
+      .on('data', (row) => {
+        console.log(row);
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed');
+      });
+    return 0;
+  }
+  catch(e){
+    console.log(`error on _updateTablefromCsv\n${e}`);
+    return -1;
+  }
 };
 
 const _exportTabletoCsv = async (tableName, filePath) => {
