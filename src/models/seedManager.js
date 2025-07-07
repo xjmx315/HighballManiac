@@ -1,7 +1,7 @@
 //seedManager.js
 
 import db from './db.js';
-import {readFile} from 'fs/promises';
+import {readFile, writeFile} from 'fs/promises';
 import {createReadStream} from 'fs';
 import path from 'path';
 import { Parser } from 'json2csv';
@@ -11,6 +11,10 @@ import csv from 'csv-parser';
 dotenv.config();
 
 const schemaVer = process.env.SCHEMA_VER || '0';
+
+const _isArrayEqual = (arr1, arr2) => {
+  return  arr1.length === arr2.length && arr1.every((val, ind) => val === arr2[ind]);
+}
 
 const _deleteData = async (tableName) => {
   //테이블에 있는 모든 데이터를 지운다. 
@@ -27,22 +31,52 @@ const _deleteData = async (tableName) => {
 
 const _updateTablefromCsv = async (tableName, filePath) => {
   //csv파일에 있는 데이터를 테이블에 추가한다. 기존 데이터는 유지된다. 
-  console.log(filePath);
+  console.log(tableName, filePath);
 
+  //테이블에서 행 정보 구하기
+  const tableInfo = await db.query(`DESCRIBE ${tableName};`);
+  const columnsFromTable = tableInfo[0].map(row => {return row.Field});
+  console.log('header form table');
+  console.log(columnsFromTable);
+
+  //데이터 삽입
   try{
     createReadStream(filePath, 'utf8')
       .pipe(csv())
-      .on('data', (row) => {
-        console.log(row);
+      .on('headers', (headers) => {
+        console.log('header form csv: ');
+        console.log(headers);
+        if (!_isArrayEqual(columnsFromTable, headers)){
+          throw new Error('업로드 된 파일의 column과 table의 column이 일치하지 않습니다. ');
+        }
+      })
+      .on('data', async (row) => {
+        try {
+          const data = columnsFromTable.map(v => {return row[v]});
+          console.log('query: ', `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`);
+          console.log(data);
+          await db.execute(
+            `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`,
+            data
+          );
+        }
+        catch (e) {
+          console.error('삽입 실패: ');
+          console.log(row);
+          console.log(e);
+        }
       })
       .on('end', () => {
         console.log('CSV file successfully processed');
+      })
+      .on('error', (e) => {
+        console.error(e);
       });
     return 0;
   }
   catch(e){
     console.log(`error on _updateTablefromCsv\n${e}`);
-    return -1;
+    throw e;
   }
 };
 

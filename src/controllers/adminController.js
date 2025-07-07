@@ -62,13 +62,12 @@ const updateIngredients = async (req, res) => {
     }
 
     //TODO:파일 인코딩 utf-8로 확인
-    const succeed = await seedManager._updateTablefromCsv("Ingredients", req.file.path);
-
-    if (succeed === 0) {
+    try {
+        await seedManager._updateTablefromCsv("Ingredients", req.file.path);
         return res.status(200).json(new CommonResponse());
     }
-    else {
-        return res.status(500).json(new CommonResponse(false, 500, "csv파일 업데이트에 실패했습니다. "));
+    catch (e) {
+        return res.status(500).json(new CommonResponse(false, 500, e.message));
     }
 };
 
