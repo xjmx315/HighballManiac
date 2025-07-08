@@ -35,28 +35,9 @@ const initDB = async (req, res) => {
     return res.status(200).json(new CommonResponse());
 };
 
-const updateItems = async (req, res) => {
-    seedManager._updateTablefromCsv("Items", csvSeedPath);
+const updateTable = async (req, res) => {
+    const {tableName} = req.params;
 
-    return res.status(200).json(new CommonResponse());
-};
-
-const exportItems = async (req, res) => {
-    const filePath = await seedManager._exportTabletoCsv("Items", csvSeedPath);
-
-    if (filePath){
-        return res
-            .type('text/csv')
-            .download(path.join(csvSeedPath, filePath));
-    }
-    else {
-        return res
-            .status(500)
-            .json(new CommonResponse(false, 500, 'csv파일 내보내기에 실패했습니다. '));
-    }
-};
-
-const updateIngredients = async (req, res) => {
     if (!req.file) {
         return res.status(400).json(new CommonResponse(false, 400, "파일이 없습니다. "));
     }
@@ -64,7 +45,7 @@ const updateIngredients = async (req, res) => {
     //TODO:파일 인코딩 utf-8로 확인
     //TODO: 처리가 끝나고 응답해야 함. 지금은 응답하고 처리됨. 스트림 함수를 await로 처리하도록 고려. 
     try {
-        const info = await seedManager._updateTablefromCsv("Ingredients", req.file.path);
+        const info = await seedManager._updateTablefromCsv(tableName, req.file.path);
         return res.status(200).json(new CommonResponse(true, 200, 'succeed', {info}));
     }
     catch (e) {
@@ -72,8 +53,10 @@ const updateIngredients = async (req, res) => {
     }
 };
 
-const exportIngredients = async (req, res) => {
-    const filePath = await seedManager._exportTabletoCsv("Ingredients", csvSeedPath);
+const exportTable = async (req, res) => {
+    const {tableName} = req.params;
+
+    const filePath = await seedManager._exportTabletoCsv("tableName", csvSeedPath);
     if (filePath === -1) {
         return res
             .status(406)
@@ -92,8 +75,10 @@ const exportIngredients = async (req, res) => {
     }
 };
 
-const deleteIngredients = async (req, res) => {
-    const succeed = seedManager._deleteData('Ingredients');
+const deleteTable = async (req, res) => {
+    const {tableName} = req.params;
+
+    const succeed = seedManager._deleteData('tableName');
     if (succeed) {
         res.status(200).json(new CommonResponse());
     }
@@ -104,10 +89,8 @@ const deleteIngredients = async (req, res) => {
 
 export default {
     initDB,
-    updateItems,
-    exportItems,
-    updateIngredients,
-    exportIngredients,
-    deleteIngredients,
+    updateTable,
+    exportTable,
+    deleteTable,
     csvSeedPath
 };

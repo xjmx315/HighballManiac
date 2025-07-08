@@ -6,6 +6,7 @@ import itemController from '../controllers/itemController.js';
 import usersController from '../controllers/usersController.js';
 import recipeController from '../controllers/recipeController.js';
 import adminController from '../controllers/adminController.js';
+import validateTable from '../middlewares/validateTable.js';
 
 import multer from 'multer';
 
@@ -47,11 +48,9 @@ router.get('/recipe/category', recipeController.getRecipeByCategory);
 
 //admin--------
 router.get('/admin/db/init', adminController.initDB);
-router.get('/admin/db/update/item', adminController.updateItems);
-router.get('/admin/db/export/item', adminController.exportItems);
-router.post('/admin/db/update/ingredient', upload.single('file'), adminController.updateIngredients);
-router.get('/admin/db/export/ingredient', adminController.exportIngredients);
-router.get('/admin/db/delete/ingredient', adminController.deleteIngredients);
+router.get('/admin/db/export/:tableName', validateTable, adminController.exportTable);
+router.post('/admin/db/update/:tableName', validateTable, upload.single('file'), adminController.updateTable);
+router.get('/admin/db/delete/:tableName', validateTable, adminController.deleteTable);
 //TODO: 테이블명을 쿼리 파라미터로 받아서 테이블명 검사 -> 함수 호출로 api합칠 수 있도록. 
 //TODO: 트랜젝션 처리
 

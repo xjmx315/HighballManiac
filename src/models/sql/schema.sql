@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS tags (
     name VARCHAR(31) UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS recipe_tags (
+CREATE TABLE IF NOT EXISTS recipes_tags (
     recipe_id INT,
     tag_id INT,
 
