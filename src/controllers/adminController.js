@@ -62,9 +62,10 @@ const updateIngredients = async (req, res) => {
     }
 
     //TODO:파일 인코딩 utf-8로 확인
+    //TODO: 처리가 끝나고 응답해야 함. 지금은 응답하고 처리됨. 스트림 함수를 await로 처리하도록 고려. 
     try {
-        await seedManager._updateTablefromCsv("Ingredients", req.file.path);
-        return res.status(200).json(new CommonResponse());
+        const info = await seedManager._updateTablefromCsv("Ingredients", req.file.path);
+        return res.status(200).json(new CommonResponse(true, 200, 'succeed', {info}));
     }
     catch (e) {
         return res.status(500).json(new CommonResponse(false, 500, e.message));

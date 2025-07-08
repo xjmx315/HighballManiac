@@ -33,51 +33,57 @@ const _updateTablefromCsv = async (tableName, filePath) => {
   //csv파일에 있는 데이터를 테이블에 추가한다. 기존 데이터는 유지된다. 
   console.log(tableName, filePath);
 
-  //테이블에서 행 정보 구하기
   const tableInfo = await db.query(`DESCRIBE ${tableName};`);
   const columnsFromTable = tableInfo[0].map(row => {return row.Field});
   console.log('header form table');
   console.log(columnsFromTable);
 
-  //데이터 삽입
-  try{
-    createReadStream(filePath, 'utf8')
-      .pipe(csv())
-      .on('headers', (headers) => {
-        console.log('header form csv: ');
-        console.log(headers);
-        if (!_isArrayEqual(columnsFromTable, headers)){
-          throw new Error('업로드 된 파일의 column과 table의 column이 일치하지 않습니다. ');
-        }
-      })
-      .on('data', async (row) => {
-        try {
-          const data = columnsFromTable.map(v => {return row[v]});
-          console.log('query: ', `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`);
-          console.log(data);
-          await db.execute(
-            `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`,
-            data
-          );
-        }
-        catch (e) {
-          console.error('삽입 실패: ');
-          console.log(row);
-          console.log(e);
-        }
-      })
-      .on('end', () => {
-        console.log('CSV file successfully processed');
-      })
-      .on('error', (e) => {
-        console.error(e);
-      });
-    return 0;
-  }
-  catch(e){
-    console.log(`error on _updateTablefromCsv\n${e}`);
-    throw e;
-  }
+  //테이블에서 행 정보 구하기
+  return new Promise((resolve, reject) => {
+    //처리 실패 행
+    const faildRows = [];
+
+    //데이터 삽입
+    try{
+      createReadStream(filePath, 'utf8')
+        .pipe(csv())
+        .on('headers', (headers) => {
+          console.log('header form csv: ');
+          console.log(headers);
+          if (!_isArrayEqual(columnsFromTable, headers)){
+            return reject(new Error('업로드 된 파일의 column과 table의 column이 일치하지 않습니다. '));
+          }
+        })
+        .on('data', async (row) => {
+          try {
+            const data = columnsFromTable.map(v => {return row[v]});
+            console.log('query: ', `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`);
+            console.log(data);
+            await db.execute(
+              `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`,
+              data
+            );
+          }
+          catch (e) {
+            console.error('삽입 실패: ');
+            console.log(row);
+            console.log(e);
+            faildRows.push(row);
+          }
+        })
+        .on('end', () => {
+          console.log('CSV file successfully processed');
+        })
+        .on('error', (e) => {
+          return reject(e);
+        });
+      return resolve(faildRows);
+    }
+    catch(e){
+      console.log(`error on _updateTablefromCsv\n${e}`);
+      return reject(e);
+    }
+  });
 };
 
 const _exportTabletoCsv = async (tableName, filePath) => {
