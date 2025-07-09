@@ -1,6 +1,6 @@
 //validateTable.js
 
-import CommonResponse from "../prototype/commonResponse";
+import CommonResponse from "../prototype/commonResponse.js";
 
 const validateTable = (req, res, next) => {
     const acceptableTableList = [

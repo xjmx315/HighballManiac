@@ -56,7 +56,7 @@ const updateTable = async (req, res) => {
 const exportTable = async (req, res) => {
     const {tableName} = req.params;
 
-    const filePath = await seedManager._exportTabletoCsv("tableName", csvSeedPath);
+    const filePath = await seedManager._exportTabletoCsv(tableName, csvSeedPath);
     if (filePath === -1) {
         return res
             .status(406)
@@ -78,7 +78,7 @@ const exportTable = async (req, res) => {
 const deleteTable = async (req, res) => {
     const {tableName} = req.params;
 
-    const succeed = seedManager._deleteData('tableName');
+    const succeed = seedManager._deleteData(tableName);
     if (succeed) {
         res.status(200).json(new CommonResponse());
     }
