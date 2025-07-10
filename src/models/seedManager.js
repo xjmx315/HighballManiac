@@ -142,15 +142,21 @@ const executeSqlFile = async (filePath, connection) => {
 const initDB = async () => {
   const result = [];
 
+  //테이블 초기화
   result.push(await executeSqlFile('./src/models/sql/clear.sql', db));
   result.push(await executeSqlFile('./src/models/sql/schema.sql', db));
-  result.push(await executeSqlFile('./src/models/sql/seed.sql', db));
+  
+  //seed 삽입
+  await _updateTablefromCsv('users', './seeds/Users_seed.csv');
+  await _updateTablefromCsv('ingredients', './seeds/Ingredients_seed.csv');
+  await _updateTablefromCsv('items', './seeds/Items_seed.csv');
+  await _updateTablefromCsv('items_ingredients', './seeds/Items_Ingredients_seed.csv');
 
   return result;
 };
 
 export default {
-    initDB: initDB,
+    initDB,
     _deleteData,
     _exportTabletoCsv,
     _updateTablefromCsv
