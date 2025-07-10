@@ -7,6 +7,7 @@ import usersController from '../controllers/usersController.js';
 import recipeController from '../controllers/recipeController.js';
 import adminController from '../controllers/adminController.js';
 import validateTable from '../middlewares/validateTable.js';
+import ingredientController from '../controllers/ingredientController.js';
 
 import multer from 'multer';
 
@@ -20,7 +21,7 @@ router.get('/item/search', itemController.searchItemByName);
 //router.post('/item', itemController.newItem);
 
 //Ingredient--------
-//router.get('/ingredient/search', ingredientController.searchIngredientByName);
+router.get('/ingredient/search', ingredientController.searchIngredientByName);
 //router.post('/ingredient', ingredientController.newIngredient);
 //router.get('/ingredient', ingredientController.getById);
 
