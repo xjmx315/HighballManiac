@@ -21,7 +21,19 @@ const searchIngredientByName = async (searchTerm) => {
     }
 }
 
+const getById = async (id) => {
+    try{
+        const [results] = await db.query('SELECT * FROM ingredients WHERE id=?', [id]);
+        return results;
+    }
+    catch(err){
+        console.error('쿼리 실패: ', err);
+        return err;
+    }
+}
+
 export default {
     newIngredient,
-    searchIngredientByName
+    searchIngredientByName,
+    getById
 }

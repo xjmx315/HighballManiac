@@ -22,8 +22,8 @@ router.get('/item/search', itemController.searchItemByName);
 
 //Ingredient--------
 router.get('/ingredient/search', ingredientController.searchIngredientByName);
+router.get('/ingredient', ingredientController.getById);
 //router.post('/ingredient', ingredientController.newIngredient);
-//router.get('/ingredient', ingredientController.getById);
 
 
 //User--------
