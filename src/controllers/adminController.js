@@ -46,7 +46,7 @@ const updateTable = async (req, res) => {
     //TODO: 처리가 끝나고 응답해야 함. 지금은 응답하고 처리됨. 스트림 함수를 await로 처리하도록 고려. 
     try {
         const info = await seedManager._updateTablefromCsv(tableName, req.file.path);
-        return res.status(200).json(new CommonResponse(true, 200, 'succeed', {info}));
+        return res.status(200).json(new CommonResponse().setData({info}));
     }
     catch (e) {
         return res.status(500).json(new CommonResponse(false, 500, e.message));
