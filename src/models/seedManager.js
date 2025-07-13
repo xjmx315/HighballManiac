@@ -51,7 +51,8 @@ const _updateTablefromCsv = async (tableName, filePath) => {
           console.log('header form csv: ');
           console.log(headers);
           if (!_isArrayEqual(columnsFromTable, headers)){
-            return reject(new Error('업로드 된 파일의 column과 table의 column이 일치하지 않습니다. '));
+            reject(new Error('업로드 된 파일의 column과 table의 column이 일치하지 않습니다. '));
+            this.destroy();
           }
         })
         .on('data', async (row) => {
@@ -68,16 +69,16 @@ const _updateTablefromCsv = async (tableName, filePath) => {
             console.error('삽입 실패: ');
             console.log(row);
             console.log(e);
-            faildRows.push(row);
+            faildRows.push([row, e.message]);
           }
         })
         .on('end', () => {
           console.log('CSV file successfully processed');
+          return resolve(faildRows);
         })
         .on('error', (e) => {
           return reject(e);
         });
-      return resolve(faildRows);
     }
     catch(e){
       console.log(`error on _updateTablefromCsv\n${e}`);
