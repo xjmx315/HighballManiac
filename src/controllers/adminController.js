@@ -43,10 +43,15 @@ const updateTable = async (req, res) => {
     }
 
     //TODO:파일 인코딩 utf-8로 확인
-    //TODO: 처리가 끝나고 응답해야 함. 지금은 응답하고 처리됨. 
     try {
         const info = await seedManager._updateTablefromCsv(tableName, req.file.path);
-        return res.status(200).json(new CommonResponse().setData({info}));
+        if (info.length === 0){
+            return res.status(200).json(new CommonResponse().setMessage('모든 행을 정상적으로 처리했습니다. '));
+        }
+        else{
+            return res.status(200).json(new CommonResponse().setMessage('일부 행 처리에 실패했습니다. ').setData({info}));
+        }
+        
     }
     catch (e) {
         return res.status(500).json(new CommonResponse(false, 500, e.message));

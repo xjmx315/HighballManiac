@@ -38,27 +38,40 @@ const _updateTablefromCsv = async (tableName, filePath) => {
   console.log('header form table');
   console.log(columnsFromTable);
 
-  //테이블에서 행 정보 구하기
-  return new Promise((resolve, reject) => {
-    //처리 실패 행
-    const faildRows = [];
+  //처리 실패 행 저장
+  const faildRows = [];
 
-    //데이터 삽입
+  //스트림 만들기
+  const source = createReadStream(filePath, 'utf8');
+  const parser = csv();
+  source.pipe(parser);
+
+  const prosecc = new Promise((resolve, reject) => {
+    let pandingTasks =  0;
+    let isParserend = false;
+
+    const checkTaskEnd = () => {
+      if (pandingTasks === 0 && isParserend) {
+        resolve();
+      }
+    }
+
     try{
-      createReadStream(filePath, 'utf8')
-        .pipe(csv())
+      parser
         .on('headers', (headers) => {
           console.log('header form csv: ');
           console.log(headers);
           if (!_isArrayEqual(columnsFromTable, headers)){
             reject(new Error('업로드 된 파일의 column과 table의 column이 일치하지 않습니다. '));
-            this.destroy();
+            source.destroy();
+            parser.destroy();
           }
         })
         .on('data', async (row) => {
+          pandingTasks += 1;
           try {
             const data = columnsFromTable.map(v => {return row[v]});
-            console.log('query: ', `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`);
+            //console.log('query: ', `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`);
             console.log(data);
             await db.execute(
               `INSERT INTO ${tableName} (${columnsFromTable.join(', ')}) VALUES (${Array(columnsFromTable.length).fill('?').join(', ')})`,
@@ -71,20 +84,28 @@ const _updateTablefromCsv = async (tableName, filePath) => {
             console.log(e);
             faildRows.push([row, e.message]);
           }
+          finally {
+            pandingTasks -= 1;
+            checkTaskEnd();
+          }
         })
         .on('end', () => {
           console.log('CSV file successfully processed');
-          return resolve(faildRows);
+          isParserend = true;
+          checkTaskEnd();
         })
         .on('error', (e) => {
-          return reject(e);
+          reject(e);
         });
     }
     catch(e){
       console.log(`error on _updateTablefromCsv\n${e}`);
-      return reject(e);
+      reject(e);
     }
   });
+
+  await prosecc;
+  return faildRows;
 };
 
 const _exportTabletoCsv = async (tableName, filePath) => {
