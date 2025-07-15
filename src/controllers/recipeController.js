@@ -3,6 +3,8 @@ import recipeService from '../services/recipeService.js';
 
 
 const newRecipe = (req, res) => {
+    //body 필수 항목 검사
+    const requiredField = ['name', 'discription', 'recipe', 'alcohol'];
     const recipe = recipeService.newRecipe(req.body);
     if (!recipe) {
         return res.status(400).json({message: "레시피 생성에 실패했습니다. "});
