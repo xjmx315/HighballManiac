@@ -1,15 +1,24 @@
 //recipeController.js
 import recipeService from '../services/recipeService.js';
+import CommonResponse from '../prototype/commonResponse.js';
 
 
-const newRecipe = (req, res) => {
+const newRecipe = async (req, res) => {
     //body 필수 항목 검사
-    const requiredField = ['name', 'discription', 'recipe', 'alcohol'];
-    const recipe = recipeService.newRecipe(req.body);
-    if (!recipe) {
-        return res.status(400).json({message: "레시피 생성에 실패했습니다. "});
+    const requiredField = ['name', 'discription', 'recipe', 'alcohol', 'ingredients', 'items'];
+    for (const key of requiredField) {
+        if (!(key in req.body)) {
+            return res.status(400).json(new CommonResponse(false, 400, `필드 '${key}'이(가) 누락되었습니다. `));
+        }
+    };
+
+    //service 호출
+    const serviceResult = await recipeService.newRecipe({ userId: req.userInfo.id , ...req.body });
+    if (!serviceResult.ok) {
+        return res.status(400).json(new CommonResponse(false, 400, serviceResult.message));
     }
-    res.status(201).json(recipe);
+
+    res.status(201).json(new CommonResponse().setCode(201).setData({ id: serviceResult.id }));
 };
 
 const getPopualer = (req, res) => {
