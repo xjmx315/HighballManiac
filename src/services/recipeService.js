@@ -1,8 +1,11 @@
 //recipeService.js
 
-const newRecipe = () => {
-    
+import recipeModel from "../models/recipeModel.js";
 
+const newRecipe = async ({ name, discription, recipe, alcohol, ingredients, items, userId }) => {
+    const result = await recipeModel.newRecipe({name, discription, recipe, alcohol, ingredients, items, userId});
+    console.log(result);
+    return result;
 };
 
 const getPopualer = () => {
@@ -22,6 +25,7 @@ const getById = () => {
 };  
 
 const searchRecipeByName = () => {
+    
 
 };
 
