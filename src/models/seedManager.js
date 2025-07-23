@@ -173,6 +173,7 @@ const initDB = async () => {
   await _updateTablefromCsv('ingredients', './seeds/Ingredients_seed.csv');
   await _updateTablefromCsv('items', './seeds/Items_seed.csv');
   await _updateTablefromCsv('items_ingredients', './seeds/Items_Ingredients_seed.csv');
+  await _updateTablefromCsv('tags', './seeds/Tags_seed.csv');
 
   return result;
 };
