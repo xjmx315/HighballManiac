@@ -6,8 +6,10 @@ import itemController from '../controllers/itemController.js';
 import usersController from '../controllers/usersController.js';
 import recipeController from '../controllers/recipeController.js';
 import adminController from '../controllers/adminController.js';
-import validateTable from '../middlewares/validateTable.js';
 import ingredientController from '../controllers/ingredientController.js';
+
+import validateTable from '../middlewares/validateTable.js';
+import authentication from '../middlewares/authentication.js';
 
 import multer from 'multer';
 
@@ -37,7 +39,7 @@ router.delete('/user', usersController.deleteUser);
 
 
 //Recipe--------
-router.post('/recipe', recipeController.newRecipe);
+router.post('/recipe', authentication, recipeController.newRecipe);
 router.get('/recipe/popualer', recipeController.getPopualer);
 router.get('/recipe/newest', recipeController.getNewest);
 router.get('/recipe/random', recipeController.getRandom);
