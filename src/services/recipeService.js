@@ -3,15 +3,15 @@
 import recipeModel from "../models/recipeModel.js";
 
 const newRecipe = async (recipe) => {
-    console.log(recipe);
     if (!recipe.image) {
         recipe.image = '';
     }
     try {
-        const [result] = await recipeModel.newRecipe(recipe);
-        return {ok: true, id: result.id};
+        const result = await recipeModel.newRecipe(recipe);
+        return {ok: true, id: result.insertId};
     }
     catch (e) {
+        console.log(e);
         if (e.message === 'name column must be unique') {
             return { ok: false, message: '이미 같은 이름의 레시피가 있습니다. '};
         }

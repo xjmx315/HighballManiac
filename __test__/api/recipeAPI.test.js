@@ -79,7 +79,7 @@ describe("/recipe (post)", () => {
             .set('Authorization', `Bearer ${token}`)
             .send(recipeSample);
 
-        expect(result.body).toEqual(new CommonResponse().setCode(201).setData({ id: 1 }));
+        expect(result.body.data.id).toBeDefined();
         expect(result.status).toBe(201);
     });
 

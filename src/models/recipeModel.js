@@ -19,7 +19,7 @@ const newRecipe = async ({ name, description, recipe, alcohol, image, ingredient
 
     for (const item_id of items) {
         await db.execute(
-            'INSERT INTO recipes_ingredients (recipe_id, ingredient_id) VALUES (?, ?)', 
+            'INSERT INTO recipes_items (recipe_id, item_id) VALUES (?, ?)', 
             [recipe_id, item_id]
         );
     }
