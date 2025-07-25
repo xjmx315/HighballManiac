@@ -5,7 +5,7 @@ import CommonResponse from '../prototype/commonResponse.js';
 
 const newRecipe = async (req, res) => {
     //body 필수 항목 검사
-    const requiredField = ['name', 'discription', 'recipe', 'alcohol', 'ingredients', 'items'];
+    const requiredField = ['name', 'description', 'recipe', 'alcohol', 'ingredients', 'items'];
     for (const key of requiredField) {
         if (!(key in req.body)) {
             return res.status(400).json(new CommonResponse(false, 400, `필드 '${key}'이(가) 누락되었습니다. `));
@@ -13,7 +13,7 @@ const newRecipe = async (req, res) => {
     };
 
     //service 호출
-    const serviceResult = await recipeService.newRecipe({ userId: req.userInfo.id , ...req.body });
+    const serviceResult = await recipeService.newRecipe({ userId: req.userInfo.userId , ...req.body });
     if (!serviceResult.ok) {
         return res.status(400).json(new CommonResponse(false, 400, serviceResult.message));
     }
