@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS ingredients (
 CREATE TABLE IF NOT EXISTS recipes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
-    name VARCHAR(127), 
+    name VARCHAR(127) UNIQUE, 
     description VARCHAR(511),
     recipe VARCHAR(1023),
     image VARCHAR(255),

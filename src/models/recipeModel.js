@@ -3,14 +3,12 @@
 import db from './db.js';
 
 const newRecipe = async ({ name, description, recipe, alcohol, image, ingredients, items, userId }) => {
-    console.log([userId, name, description, recipe, alcohol, image]);
-
     const [result] = await db.execute(
-        'INSERT INTO recipes (user_id, name, description, recipe, alcohol, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+        'INSERT INTO recipes (user_id, name, description, recipe, alcohol_percentage, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
         [userId, name, description, recipe, alcohol, image]
     );
 
-    const recipe_id = result.id;
+    const recipe_id = result.insertId;
 
     for (const ingredient_id of ingredients) {
         await db.execute(
