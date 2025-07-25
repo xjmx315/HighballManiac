@@ -8,6 +8,8 @@ import dotenv from 'dotenv';
 import db from "../../src/models/db.js";
 
 dotenv.config();
+//recipes 테이블에 '진 피즈' 칵테일을 넣으며 테스트합니다. 이미 '진 피즈가 있을 경우 테스트가 실패할 수 있습니다. '
+//TODO: 레시피 삭제 api와 연동해서 테스트 독립성 유지하기. ('test_recipe' 삽입하고 삭제)
 
 describe("/recipe (post)", () => {
     beforeEach(() => {
@@ -73,7 +75,7 @@ describe("/recipe (post)", () => {
         expect(result.body).toEqual(new CommonResponse(false, 400, `필드 '${'name'}'이(가) 누락되었습니다. `));
     });
 
-    test("새로운 레시피 작성 - 정상 작성", async () => {
+    test("새로운 레시피 작성 - 정상 작성 & 중복 작성", async () => {
         const result = await request(app)
             .post("/api/recipe")
             .set('Authorization', `Bearer ${token}`)
@@ -81,6 +83,14 @@ describe("/recipe (post)", () => {
 
         expect(result.body.data.id).toBeDefined();
         expect(result.status).toBe(201);
+
+        const result2 = await request(app)
+            .post("/api/recipe")
+            .set('Authorization', `Bearer ${token}`)
+            .send(recipeSample);
+
+        expect(result2.body).toEqual(new CommonResponse(false, 400, '이미 같은 이름의 레시피가 있습니다. '));
+        expect(result2.status).toBe(400);
     });
 
     afterAll(async () => {

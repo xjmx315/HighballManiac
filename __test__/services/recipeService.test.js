@@ -39,7 +39,7 @@ describe('newRecipe', () => {
     });
 
     test('이미 있는 이름은 실패', async () => {
-        recipeModel.newRecipe.mockRejectedValue(new Error('name column must be unique'));
+        recipeModel.newRecipe.mockRejectedValue(new Error("Duplicate entry '진 피즈' for key 'recipes.name'"));
 
         const result = await recipeService.newRecipe(recipe);
 
@@ -47,7 +47,7 @@ describe('newRecipe', () => {
     });
 
     test('레시피 생성 성공시 id 반환(이미지 자동 공백 처리)', async () => {
-        recipeModel.newRecipe.mockResolvedValue([{id: 1}]);
+        recipeModel.newRecipe.mockResolvedValue({insertId: 1});
 
         const result = await recipeService.newRecipe(recipe);
 
@@ -56,7 +56,7 @@ describe('newRecipe', () => {
     });
 
     test('레시피 생성 성공시 id 반환(이미지가 있으면 있는 걸로 처리)', async () => {
-        recipeModel.newRecipe.mockResolvedValue([{id: 1}]);
+        recipeModel.newRecipe.mockResolvedValue({insertId: 1});
         const recipeWithImage = JSON.parse(JSON.stringify(recipe));
         recipeWithImage.image = 'image';
 

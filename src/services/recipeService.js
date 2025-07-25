@@ -11,8 +11,7 @@ const newRecipe = async (recipe) => {
         return {ok: true, id: result.insertId};
     }
     catch (e) {
-        console.log(e);
-        if (e.message === 'name column must be unique') {
+        if (e.message.startsWith('Duplicate entry')) {
             return { ok: false, message: '이미 같은 이름의 레시피가 있습니다. '};
         }
         return { ok: false, message: `지정되지 않은 에러가 발생했습니다. : ${e.message}`};
