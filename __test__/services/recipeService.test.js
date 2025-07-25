@@ -9,7 +9,7 @@ import recipeService from "../../src/services/recipeService";
 describe('newRecipe', () => {
     let recipe = {
         name: 'name',
-        discription: '.',
+        description: '.',
         recipe: '.',
         alcohol: '.',
         ingredients: [],
@@ -21,7 +21,7 @@ describe('newRecipe', () => {
         jest.clearAllMocks();
         recipe = {
             name: 'name',
-            discription: '.',
+            description: '.',
             recipe: '.',
             alcohol: '.',
             ingredients: [],
@@ -85,7 +85,7 @@ describe('searchRecipeByName', () => {
     test('이름이 존재할 경우 recipe 객체 배열 반환', async () => {
         const recipe = {
             name: '있는 이름',
-            discription: 'test obj'
+            description: 'test obj'
         };
         recipeModel.searchRecipeByName.mockResolvedValue([recipe]);
 

@@ -14,7 +14,7 @@ describe('newRecipe', () => {
         userInfo: { data: "this is sample user data", id: 1},
         body: {
             name: 'name',
-            discription: '.',
+            description: '.',
             recipe: '.',
             alcohol: '.',
             ingredients: [],
@@ -57,7 +57,7 @@ describe('newRecipe', () => {
 
         expect(recipeService.newRecipe).toHaveBeenCalledWith({
             name: 'name',
-            discription: '.',
+            description: '.',
             recipe: '.',
             alcohol: '.',
             ingredients: [],
