@@ -18,10 +18,26 @@ const newRecipe = async (recipe) => {
     }
 };
 
+const getById = async (id) => {
+    try {
+        const result = await recipeModel.getById(id);
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+};  
+
 const searchRecipeByName = async (name) => {
-    const result = await recipeModel.searchRecipeByName(name);
-
-
+    try {
+        const result = await recipeModel.searchRecipeByName(name);
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
 };
 
 
@@ -34,10 +50,6 @@ const getNewest = async () => {
 };  
 
 const getRandom = async () => {
-
-};  
-
-const getById = async () => {
 
 };  
 

@@ -67,6 +67,31 @@ describe('newRecipe', () => {
     });
 });
 
+describe('getById', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('존재하지 않는 아이디 undifine 반환', async () => {
+        recipeModel.getById.mockRejectedValue('nothig like that!');
+
+        const result = await recipeService.getById(1);
+
+        expect(recipeModel.getById).toHaveBeenCalledWith(1);
+        expect(result).toBe(undefined);
+    });
+
+    test('정상 레시피 반환', async () => {
+        const recipeData = {name: 'sample recipe', id: 1, userId: 2}
+        recipeModel.getById.mockResolvedValue({name: 'sample recipe', id: 1, userId: 2});
+
+        const result = await recipeService.getById(1);
+
+        expect(recipeModel.getById).toHaveBeenCalledWith(1);
+        expect(result).toEqual({name: 'sample recipe', id: 1, userId: 2});
+    });
+});
+
 /*
 describe('searchRecipeByName', () => {
     beforeEach(() => {
