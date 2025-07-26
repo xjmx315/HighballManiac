@@ -21,7 +21,10 @@ const newRecipe = async (recipe) => {
 const getById = async (id) => {
     try {
         const result = await recipeModel.getById(id);
-        return result;
+        if (result.length === 0){
+            return undefined;
+        }
+        return result[0];
     }
     catch (e) {
         console.log(e);
