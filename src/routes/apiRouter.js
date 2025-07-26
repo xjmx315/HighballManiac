@@ -43,10 +43,10 @@ router.post('/recipe', authentication, recipeController.newRecipe);
 router.get('/recipe/popualer', recipeController.getPopualer);
 router.get('/recipe/newest', recipeController.getNewest);
 router.get('/recipe/random', recipeController.getRandom);
-router.get('/recipe', recipeController.getById);
 router.get('/recipe/search', recipeController.searchRecipeByName);
 router.get('/recipe/category', recipeController.getRecipeByCategory);
 //router.get('/recipe/including', recipeController.searchByIngredient);
+router.get('/recipe/:id', recipeController.getById);
 
 
 //admin--------

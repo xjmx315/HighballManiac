@@ -21,6 +21,19 @@ const newRecipe = async (req, res) => {
     res.status(201).json(new CommonResponse().setCode(201).setData({ id: serviceResult.id }));
 };
 
+const getById = async (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+        return res.status(400).json(new CommonResponse(false, 400, 'id를 포함해야 합니다. '));
+    }
+    
+    const result = await recipeService.getById(id);
+    if (!result) {
+        return res.status(404).json(new CommonResponse(false, 404, '존재하지 않는 id 입니다. '));
+    }
+    return res.status(200).json(new CommonResponse().setData(result));
+};
+
 const getPopualer = (req, res) => {
 
 };
@@ -30,10 +43,6 @@ const getNewest = (req, res) => {
 };
 
 const getRandom = (req, res) => {
-
-};
-
-const getById = (req, res) => {
 
 };
 

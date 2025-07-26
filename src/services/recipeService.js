@@ -25,23 +25,23 @@ const searchRecipeByName = async (name) => {
 };
 
 
-const getPopualer = () => {
+const getPopualer = async () => {
 
 };
 
-const getNewest = () => {
+const getNewest = async () => {
 
 };  
 
-const getRandom = () => {
+const getRandom = async () => {
 
 };  
 
-const getById = () => {
+const getById = async () => {
 
 };  
 
-const getRecipeByCategory = () => {
+const getRecipeByCategory = async () => {
 
 };  
 
