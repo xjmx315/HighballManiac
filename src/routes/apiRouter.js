@@ -49,6 +49,9 @@ router.get('/recipe/category', recipeController.getRecipeByCategory);
 router.get('/recipe/:id', recipeController.getById);
 
 
+//Tags--------
+//router.get('/tag', )
+
 //admin--------
 router.get('/admin/db/init', adminController.initDB);
 router.get('/admin/db/export/:tableName', validateTable, adminController.exportTable);
