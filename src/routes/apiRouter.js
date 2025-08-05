@@ -7,6 +7,7 @@ import usersController from '../controllers/usersController.js';
 import recipeController from '../controllers/recipeController.js';
 import adminController from '../controllers/adminController.js';
 import ingredientController from '../controllers/ingredientController.js';
+import tagController from '../controllers/tagController.js';
 
 import validateTable from '../middlewares/validateTable.js';
 import authentication from '../middlewares/authentication.js';
@@ -50,7 +51,7 @@ router.get('/recipe/:id', recipeController.getById);
 
 
 //Tags--------
-//router.get('/tag', )
+router.get('/tag', tagController.searchTags);
 
 //admin--------
 router.get('/admin/db/init', adminController.initDB);

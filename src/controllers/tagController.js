@@ -1,7 +1,7 @@
 //tagController.js
 
-import CommonResponse from "../prototype/commonResponse";
-import tagService from "../services/tagService";
+import CommonResponse from "../prototype/commonResponse.js";
+import tagService from "../services/tagService.js";
 
 const searchTags = async (req, res) => {
     const searchTerm = req.query.name;
