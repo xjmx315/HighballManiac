@@ -190,3 +190,50 @@ describe('getById', () => {
         expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData(recipeData));
     });
 });
+
+describe('getTags', () => {
+    const req = {
+        params: {
+            id: 1
+        }
+    };
+    const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+    };
+    
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('필수 항목 누락시 400', async () => {
+        const errorReq = JSON.parse(JSON.stringify(req));
+        delete errorReq.params.id;
+
+        await recipeController.getTags(errorReq, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 400, "id를 포함해야 합니다. "));
+    });
+
+    test('존재하지 않는 아이디 요청시 404', async () => {
+        recipeService.getTags.mockResolvedValue(undefined);
+
+        await recipeController.getTags(req, res);
+
+        expect(recipeService.getTags).toHaveBeenCalledWith(1);
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 404, "id 또는 등록된 태그가 없습니다. "));
+    });
+
+    test('성공적 검색 200', async () => {
+        const tagData = [{name: '럼 베이스', id:28}, {name: '보드카 베이스', id: 27}];
+        recipeService.getTags.mockResolvedValue(tagData);
+
+        await recipeController.getTags(req, res);
+
+        expect(recipeService.getTags).toHaveBeenCalledWith(1);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData(tagData));
+    });
+});

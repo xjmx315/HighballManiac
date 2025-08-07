@@ -97,7 +97,7 @@ describe('getById', () => {
     });
 
     test('존재하지 않는 아이디 undifine 반환', async () => {
-        recipeModel.getById.mockRejectedValue('nothig like that!');
+        recipeModel.getById.mockResolvedValue([]);
 
         const result = await recipeService.getById(1);
 
@@ -113,6 +113,32 @@ describe('getById', () => {
 
         expect(recipeModel.getById).toHaveBeenCalledWith(1);
         expect(result).toEqual(recipeData);
+    });
+});
+
+describe('getTags', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('존재하지 않는 아이디 undifine 반환', async () => {
+        recipeModel.getById.mockResolvedValue([]);
+        recipeModel.getTags.mockResolvedValue([]);
+
+        const result = await recipeService.getTags(1);
+
+        expect(recipeModel.getTags).toHaveBeenCalledWith(1);
+        expect(result).toBe(undefined);
+    });
+
+    test('정상 태그 리스트 반환', async () => {
+        const tagData = [{name: '럼 베이스', id:28}, {name: '보드카 베이스', id: 27}];
+        recipeModel.getTags.mockResolvedValue(tagData);
+
+        const result = await recipeService.getTags(1);
+
+        expect(recipeModel.getTags).toHaveBeenCalledWith(1);
+        expect(result).toEqual(tagData);
     });
 });
 

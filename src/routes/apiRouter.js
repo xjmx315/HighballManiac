@@ -42,6 +42,7 @@ router.delete('/user', usersController.deleteUser);
 //Recipe--------
 router.post('/recipe', authentication, recipeController.newRecipe);
 router.post('/recipe/tag', authentication, recipeController.addTag);
+router.get('/recipe/tag/:id', recipeController.getTags);
 router.get('/recipe/popualer', recipeController.getPopualer);
 router.get('/recipe/newest', recipeController.getNewest);
 router.get('/recipe/random', recipeController.getRandom);

@@ -61,6 +61,19 @@ const getById = async (req, res) => {
     return res.status(200).json(new CommonResponse().setData(result));
 };
 
+const getTags = async (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+        return res.status(400).json(new CommonResponse(false, 400, 'id를 포함해야 합니다. '));
+    }
+    
+    const result = await recipeService.getTags(id);
+    if (!result) {
+        return res.status(404).json(new CommonResponse(false, 404, 'id 또는 등록된 태그가 없습니다. '));
+    }
+    return res.status(200).json(new CommonResponse().setData(result));
+};
+
 const getPopualer = (req, res) => {
 
 };
@@ -85,10 +98,11 @@ const getRecipeByCategory = (req, res) => {
 export default {
     newRecipe,
     addTag,
+    getById,
+    getTags,
     getPopualer,
     getNewest,
     getRandom,
-    getById,
     searchRecipeByName,
     getRecipeByCategory,
 };

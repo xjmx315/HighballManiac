@@ -29,16 +29,24 @@ const newRecipe = async ({ name, description, recipe, alcohol, image, ingredient
 
 const addTag = async (recipeId, tagId) => {
     const [result] = await db.execute(
-        'INSERT INTO recipes_tags (recipe_id, tag_id) VALUES (?, ?)', [recipeId, tagId]);
+        'INSERT INTO recipes_tags (recipe_id, tag_id) VALUES (?, ?);', [recipeId, tagId]);
     return result;
 };
 
 const getById = async (id) => {
     const [recipe] = await db.execute(
-        'SELECT * FROM recipes WHERE id = ?',
+        'SELECT * FROM recipes WHERE id = ?;',
         [id]
     );
     return recipe;
+};
+
+const getTags = async (id) => {
+    const [tags] = await db.execute(
+        'SELECT T.* FROM recipes_tags AS RT JOIN tags AS T ON RT.tag_id = T.id WHERE RT.recipe_id = ?;',
+        [id]
+    );
+    return tags;
 };
 
 const searchRecipeByName = async (name) => {
@@ -53,5 +61,6 @@ export default {
     newRecipe,
     addTag,
     getById,
+    getTags,
     searchRecipeByName
 }

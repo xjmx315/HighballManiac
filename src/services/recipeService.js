@@ -41,7 +41,21 @@ const getById = async (id) => {
         console.log(e);
         return undefined;
     }
-};  
+};
+
+const getTags = async (id) => {
+    try {
+        const result = await recipeModel.getTags(id);
+        if (result.length === 0) {
+            return undefined;
+        }
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+};
 
 const searchRecipeByName = async (name) => {
     try {
@@ -75,10 +89,11 @@ const getRecipeByCategory = async () => {
 export default {
     newRecipe,
     addTag,
+    getById,
+    getTags,
     getPopualer,
     getNewest,
     getRandom,
-    getById,
     searchRecipeByName,
     getRecipeByCategory
 };
