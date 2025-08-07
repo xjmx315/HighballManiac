@@ -16,7 +16,6 @@ const searchTags = async (searchTerm) => {
 const getById = async (id) => {
     try {
         const result = await tagModel.getById(id);
-        console.log(result);
         if (result.length === 0) {
             return undefined;
         }

@@ -19,7 +19,14 @@ const newRecipe = async (recipe) => {
 };
 
 const addTag = async (recipeId, tagId) => {
-
+    try {
+        const result = await recipeModel.addTag(recipeId, tagId);
+        return true;
+    }
+    catch (e) {
+        console.error(e);
+        return false;
+    }
 };
 
 const getById = async (id) => {

@@ -67,6 +67,30 @@ describe('newRecipe', () => {
     });
 });
 
+describe('addTag', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('태그 추가 성공 true 반환', async () => {
+        recipeModel.addTag.mockResolvedValue([]);
+
+        const result = await recipeService.addTag(1, 2);
+
+        expect(recipeModel.addTag).toHaveBeenCalledWith(1, 2);
+        expect(result).toBe(true);
+    });
+
+    test('태그 추가 실패 false 반환', async () => {
+        recipeModel.addTag.mockRejectedValue(new Error('error!'));
+
+        const result = await recipeService.addTag(1, 2);
+
+        expect(recipeModel.addTag).toHaveBeenCalledWith(1, 2);
+        expect(result).toBe(false);
+    });
+});
+
 describe('getById', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -83,12 +107,12 @@ describe('getById', () => {
 
     test('정상 레시피 반환', async () => {
         const recipeData = {name: 'sample recipe', id: 1, userId: 2}
-        recipeModel.getById.mockResolvedValue({name: 'sample recipe', id: 1, userId: 2});
+        recipeModel.getById.mockResolvedValue([recipeData]);
 
         const result = await recipeService.getById(1);
 
         expect(recipeModel.getById).toHaveBeenCalledWith(1);
-        expect(result).toEqual({name: 'sample recipe', id: 1, userId: 2});
+        expect(result).toEqual(recipeData);
     });
 });
 

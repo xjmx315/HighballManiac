@@ -23,7 +23,29 @@ const newRecipe = async (req, res) => {
 };
 
 const addTag = async (req, res) => {
-    
+    const {recipeId, tagId} = req.body;
+
+    //레시피 유효성 검사
+    const recipeData = await recipeService.getById(recipeId);
+    if (!recipeData) {
+        return res.status(404).json(new CommonResponse(false, 404, '존재하지 않는 레시피 입니다. '));
+    }
+    if (recipeData.user_id !== req.userInfo.userId) {
+        return res.status(403).json(new CommonResponse(false, 403, '자신이 업로드한 레시피만 수정할 수 있습니다. '));
+    }
+
+    //태그 유효성 검사
+    if (!await tagService.getById(tagId)) {
+        return res.status(404).json(new CommonResponse(false, 404, '존재하지 않는 태그입니다. '));
+    }
+
+    try {
+        await recipeService.addTag(recipeId, tagId);
+        return res.status(200).json(new CommonResponse());
+    }
+    catch (e) {
+        return res.status(500).json(new CommonResponse(false, 500, '예기치 못한 에러가 발생했습니다. ', e.message));
+    }
 };
 
 const getById = async (req, res) => {

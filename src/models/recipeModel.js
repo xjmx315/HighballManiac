@@ -27,6 +27,12 @@ const newRecipe = async ({ name, description, recipe, alcohol, image, ingredient
     return result;
 };
 
+const addTag = async (recipeId, tagId) => {
+    const [result] = await db.execute(
+        'INSERT INTO recipes_tags (recipe_id, tag_id) VALUES (?, ?)', [recipeId, tagId]);
+    return result;
+};
+
 const getById = async (id) => {
     const [recipe] = await db.execute(
         'SELECT * FROM recipes WHERE id = ?',
@@ -45,6 +51,7 @@ const searchRecipeByName = async (name) => {
 
 export default {
     newRecipe,
+    addTag,
     getById,
     searchRecipeByName
 }
