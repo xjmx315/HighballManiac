@@ -13,8 +13,19 @@ const searchTags = async (searchTerm) => {
     }
 };
 
-const getById = async () => {
-
+const getById = async (id) => {
+    try {
+        const result = await tagModel.getById(id);
+        console.log(result);
+        if (result.length === 0) {
+            return undefined;
+        }
+        return result[0];
+    }
+    catch (e) {
+        console.error(e);
+        return undefined;
+    }
 };
 
 export default {

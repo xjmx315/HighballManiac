@@ -53,6 +53,7 @@ router.get('/recipe/:id', recipeController.getById);
 
 //Tags--------
 router.get('/tag', tagController.searchTags);
+router.get('/tag/:id', tagController.getById);
 
 //admin--------
 router.get('/admin/db/init', adminController.initDB);

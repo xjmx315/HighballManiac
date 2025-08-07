@@ -7,6 +7,12 @@ const searchTags = async (searchTerm) => {
     return result;
 };
 
+const getById = async (id) => {
+    const [result] = await db.execute("SELECT * FROM tags WHERE id=?;", [id]);
+    return result;
+}
+
 export default {
-    searchTags
+    searchTags,
+    getById
 };

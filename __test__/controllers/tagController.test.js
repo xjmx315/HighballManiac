@@ -43,3 +43,48 @@ describe('searchTags', () => {
         expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData(tagData));
     });
 });
+
+describe('getById', () => {
+    const req = {
+        params: {
+            id: 28
+        }
+    }
+    const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+    };
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('잘못된 id', async () => {
+        const result = await tagController.getById({params: {id: 'wrong'}}, res);
+
+        expect(tagService.getById).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 400, "쿼리 형식이 잘못되었습니다. "));
+    });
+
+    test('존재하지 않는 id', async () => {
+        tagService.getById.mockResolvedValue(undefined);
+
+        const result = await tagController.getById(req, res);
+
+        expect(tagService.getById).toHaveBeenCalledWith(28);
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 404, '존재하지 않는 id 입니다. '));
+    });
+
+    test('성공적 조회', async () => {
+        const tagData = {name: '럼 베이스', id:28};
+        tagService.getById.mockResolvedValue(tagData);
+
+        const result = await tagController.getById(req, res);
+
+        expect(tagService.getById).toHaveBeenCalledWith(28);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData(tagData));
+    });
+});
