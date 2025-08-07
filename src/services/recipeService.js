@@ -18,6 +18,10 @@ const newRecipe = async (recipe) => {
     }
 };
 
+const addTag = async (recipeId, tagId) => {
+
+};
+
 const getById = async (id) => {
     try {
         const result = await recipeModel.getById(id);
@@ -62,11 +66,12 @@ const getRecipeByCategory = async () => {
 
 
 export default {
-    newRecipe: newRecipe,
-    getPopualer: getPopualer,
-    getNewest: getNewest,
-    getRandom: getRandom,
-    getById: getById,
-    searchRecipeByName: searchRecipeByName,
-    getRecipeByCategory: getRecipeByCategory
+    newRecipe,
+    addTag,
+    getPopualer,
+    getNewest,
+    getRandom,
+    getById,
+    searchRecipeByName,
+    getRecipeByCategory
 };

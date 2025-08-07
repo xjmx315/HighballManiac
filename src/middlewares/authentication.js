@@ -1,5 +1,11 @@
 //authentication.js
+/*
+유저 인증 정보를 req에 추가합니다. 
 
+헤더의 authorization 필드에서 토큰을 얻어 유저 인증. 
+req.userInfo에 { userName, userId, iat, exp } 객체 추가 후 next
+ex) { userName: 'ddd', userId: 3, iat: 1749024408, exp: 1749028008 }. 
+*/
 import CommonResponse from "../prototype/commonResponse.js";
 import usersService from "../services/usersService.js";
 

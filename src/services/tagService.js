@@ -11,8 +11,13 @@ const searchTags = async (searchTerm) => {
         console.log(e);
         return [];
     }
-}
+};
+
+const getById = async () => {
+
+};
 
 export default {
-    searchTags
+    searchTags,
+    getById
 };

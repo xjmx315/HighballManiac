@@ -1,6 +1,7 @@
 //recipeController.js
 import recipeService from '../services/recipeService.js';
 import CommonResponse from '../prototype/commonResponse.js';
+import tagService from '../services/tagService.js';
 
 
 const newRecipe = async (req, res) => {
@@ -19,6 +20,10 @@ const newRecipe = async (req, res) => {
     }
 
     res.status(201).json(new CommonResponse().setCode(201).setData({ id: serviceResult.id }));
+};
+
+const addTag = async (req, res) => {
+    
 };
 
 const getById = async (req, res) => {
@@ -56,11 +61,12 @@ const getRecipeByCategory = (req, res) => {
 
 
 export default {
-    newRecipe: newRecipe,
-    getPopualer: getPopualer,
-    getNewest: getNewest,
-    getRandom: getRandom,
-    getById: getById,
-    searchRecipeByName: searchRecipeByName,
-    getRecipeByCategory: getRecipeByCategory
+    newRecipe,
+    addTag,
+    getPopualer,
+    getNewest,
+    getRandom,
+    getById,
+    searchRecipeByName,
+    getRecipeByCategory,
 };
