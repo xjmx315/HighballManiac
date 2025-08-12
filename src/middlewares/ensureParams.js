@@ -17,11 +17,19 @@ function _isNumber(value) {
 };
 
 function ensureParams () {
-    const required = {};
+    const required = {
+        query: [],
+        body: [],
+        shouldNumberList: []
+    };
 
     const middleware = {
         onQuery(checkList) {
             required.query = checkList;
+            return this;
+        },
+        onBody(checkList) {
+            required.body = checkList;
             return this;
         },
         shouldNumber(checkList) {
@@ -36,11 +44,20 @@ function ensureParams () {
                 if (missingQuery) {
                     return res.status(400).json(new CommonResponse(false, 400, `필수 쿼리가 누락되었습니다. (${missingQuery})`));
                 }
+
+                //body 필드 검사
+                const missingField = _checkObj(req.body, required.body);
+                if (missingField) {
+                    return res.status(400).json(new CommonResponse(false, 400, `필수 필드가 누락되었습니다. (${missingField})`));
+                }
                 
                 //숫자 자료형 검사
                 for (const element of required.shouldNumberList) {
-                    if (!_isNumber(req.query[element])) {
+                    if (element in req.query && !_isNumber(req.query[element])) {
                         return res.status(400).json(new CommonResponse(false, 400, `쿼리 형식이 잘못되었습니다. (${element})`));
+                    }
+                    if (element in req.body && !_isNumber(req.body[element])) {
+                        return res.status(400).json(new CommonResponse(false, 400, `필드 형식이 잘못되었습니다. (${element})`));
                     }
                 };
 
