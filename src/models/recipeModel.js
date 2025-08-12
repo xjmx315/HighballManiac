@@ -33,6 +33,12 @@ const addTag = async (recipeId, tagId) => {
     return result;
 };
 
+const deleteTag = async (recipeId, tagId) => {
+    const [result] = await db.execute(
+        'DELETE FROM recipes_tags WHERE recipe_id = ? AND tag_id = ?;', [recipeId, tagId]);
+    return result;
+};
+
 const getById = async (id) => {
     const [recipe] = await db.execute(
         'SELECT * FROM recipes WHERE id = ?;',
@@ -60,6 +66,7 @@ const searchRecipeByName = async (name) => {
 export default {
     newRecipe,
     addTag,
+    deleteTag,
     getById,
     getTags,
     searchRecipeByName

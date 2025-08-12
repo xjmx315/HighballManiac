@@ -175,7 +175,8 @@ describe('deleteTag', () => {
     });
 
     test('레시피에 이미 없는 태그 200', async () => {
-        recipeService.getById.mockResolvedValue({user_id: 1, tags: []});
+        recipeService.getById.mockResolvedValue({user_id: 1});
+        recipeService.getTags.mockResolvedValue(undefined);
         await recipeController.deleteTag(req, res);
 
         expect(recipeService.getById).toHaveBeenCalledWith(1);
@@ -185,7 +186,8 @@ describe('deleteTag', () => {
     });
 
     test('제거 성공 200', async () => {
-        recipeService.getById.mockResolvedValue({user_id: 1, tags: [{name: '달콤한', id: 2}]}); 
+        recipeService.getById.mockResolvedValue({user_id: 1});
+        recipeService.getTags.mockResolvedValue([ { name: '달콤한', id: 2 } ]); 
         recipeService.deleteTag.mockResolvedValue(true);
         await recipeController.deleteTag(req, res);
 

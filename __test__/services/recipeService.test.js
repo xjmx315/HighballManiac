@@ -91,6 +91,30 @@ describe('addTag', () => {
     });
 });
 
+describe('deleteTag', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('태그 삭제 성공 true', async () => {
+        recipeModel.deleteTag.mockResolvedValue([]);
+
+        const result = await recipeService.deleteTag(1, 2);
+
+        expect(recipeModel.deleteTag).toHaveBeenCalledWith(1, 2);
+        expect(result).toBe(true);
+    });
+
+    test('태그 삭제 실패 false', async () => {
+        recipeModel.deleteTag.mockRejectedValue(new Error('error!'));
+
+        const result = await recipeService.deleteTag(1, 2);
+
+        expect(recipeModel.deleteTag).toHaveBeenCalledWith(1, 2);
+        expect(result).toBe(false);
+    });
+});
+
 describe('getById', () => {
     beforeEach(() => {
         jest.clearAllMocks();

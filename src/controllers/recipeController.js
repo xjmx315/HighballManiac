@@ -50,6 +50,7 @@ const addTag = async (req, res) => {
 
 const deleteTag = async (req, res) => {
     const {recipeId, tagId} = req.body;
+    console.log(req.body);
 
     //레시피 유효성 검사
     const recipeData = await recipeService.getById(recipeId);
@@ -60,13 +61,14 @@ const deleteTag = async (req, res) => {
         return res.status(403).json(new CommonResponse(false, 403, '자신이 업로드한 레시피만 수정할 수 있습니다. '));
     }
 
-    //태그 유효성 검사
-    if (!await tagService.getById(tagId)) {
-        return res.status(404).json(new CommonResponse(false, 404, '존재하지 않는 태그입니다. '));
+    //태그 존재 확인
+    const tags = await recipeService.getTags(recipeId);
+    if (!tags || !tags.some(v => v.id === tagId)) {
+        return res.status(200).json(new CommonResponse());
     }
 
     try {
-        await recipeService.addTag(recipeId, tagId);
+        await recipeService.deleteTag(recipeId, tagId);
         return res.status(200).json(new CommonResponse());
     }
     catch (e) {
@@ -80,6 +82,7 @@ const getById = async (req, res) => {
         return res.status(400).json(new CommonResponse(false, 400, 'id를 포함해야 합니다. '));
     }
     
+    //레시피 정보 받아오기
     const result = await recipeService.getById(id);
     if (!result) {
         return res.status(404).json(new CommonResponse(false, 404, '존재하지 않는 id 입니다. '));

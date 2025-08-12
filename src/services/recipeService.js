@@ -32,6 +32,7 @@ const addTag = async (recipeId, tagId) => {
 const deleteTag = async (recipeId, tagId) => {
     try {
         const result = await recipeModel.deleteTag(recipeId, tagId);
+        console.log(result);
         return true;
     }
     catch (e) {
