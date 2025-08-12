@@ -9,8 +9,10 @@ import adminController from '../controllers/adminController.js';
 import ingredientController from '../controllers/ingredientController.js';
 import tagController from '../controllers/tagController.js';
 
+//middlewares
 import validateTable from '../middlewares/validateTable.js';
 import authentication from '../middlewares/authentication.js';
+import ensureParams from '../middlewares/ensureParams.js';
 
 import multer from 'multer';
 

@@ -20,6 +20,7 @@ function ensureParams () {
     const required = {
         query: [],
         body: [],
+        params: [],
         shouldNumberList: []
     };
 
@@ -30,6 +31,10 @@ function ensureParams () {
         },
         onBody(checkList) {
             required.body = checkList;
+            return this;
+        },
+        onParam(checkList) {
+            required.params = checkList;
             return this;
         },
         shouldNumber(checkList) {
@@ -50,6 +55,12 @@ function ensureParams () {
                 if (missingField) {
                     return res.status(400).json(new CommonResponse(false, 400, `필수 필드가 누락되었습니다. (${missingField})`));
                 }
+
+                //param 필드 검사
+                const missingParam = _checkObj(req.params, required.params);
+                if (missingParam) {
+                    return res.status(400).json(new CommonResponse(false, 400, `필수 파라미터가 누락되었습니다. (${missingParam})`));
+                }
                 
                 //숫자 자료형 검사
                 for (const element of required.shouldNumberList) {
@@ -58,6 +69,9 @@ function ensureParams () {
                     }
                     if (element in req.body && !_isNumber(req.body[element])) {
                         return res.status(400).json(new CommonResponse(false, 400, `필드 형식이 잘못되었습니다. (${element})`));
+                    }
+                    if (element in req.params && !_isNumber(req.params[element])) {
+                        return res.status(400).json(new CommonResponse(false, 400, `파라미터 형식이 잘못되었습니다. (${element})`));
                     }
                 };
 
