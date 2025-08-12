@@ -27,7 +27,19 @@ const getById = async (id) => {
     }
 };
 
+const getRecipes = async (id) => {
+    try {
+        const result = await tagModel.getRecipes(id);
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return [];
+    }
+};
+
 export default {
     searchTags,
-    getById
+    getById,
+    getRecipes
 };

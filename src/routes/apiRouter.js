@@ -55,7 +55,8 @@ router.get('/recipe/:id', recipeController.getById);
 
 //Tags--------
 router.get('/tag', tagController.searchTags);
-router.get('/tag/:id', tagController.getById);
+router.get('/tag/id/:id', tagController.getById);
+router.get('/tag/recipe/:id', tagController.getRecipes);
 
 //admin--------
 router.get('/admin/db/init', adminController.initDB);

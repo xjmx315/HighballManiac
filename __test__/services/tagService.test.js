@@ -54,3 +54,28 @@ describe('getById', () => {
         expect(result).toEqual({name: '럼 베이스', id:28});
     });
 });
+
+
+describe('getRecipes', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('recipe가 없으면 빈 배열 반환', async () => {
+        tagModel.getRecipes.mockResolvedValue([]);
+        const result = await tagService.getRecipes(2);
+
+        expect(tagModel.getRecipes).toHaveBeenCalledWith(2);
+        expect(result).toEqual([]);
+    });
+
+    test('recipe가 있으면 정보 반환', async () => {
+        const recipeData = [{name: 'sample1', id:1}, {name: 'sample2', id:2}];
+        tagModel.getRecipes.mockResolvedValue(recipeData);
+
+        const result = await tagService.getRecipes(2);
+
+        expect(tagModel.getRecipes).toHaveBeenCalledWith(2);
+        expect(result).toEqual(recipeData);
+    });
+});
