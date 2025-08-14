@@ -7,6 +7,7 @@ import path from 'path';
 
 import logger from './middlewares/logger.js';
 import apiRouter from './routes/apiRouter.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 // 환경 변수 로드
 dotenv.config();
@@ -35,5 +36,13 @@ app.use(express.json());
 app.use(logger);
 
 app.use('/api', apiRouter);
+
+app.use((req, res, next) => {
+    const err = new Error(`Not Found: ${req.method} ${req.originalUrl}`);
+    err.status = 404;
+    next(err);
+});
+
+app.use(errorHandler);
 
 export default app;
