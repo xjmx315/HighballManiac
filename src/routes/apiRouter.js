@@ -19,6 +19,9 @@ import multer from 'multer';
 const upload = multer({ dest: adminController.csvSeedPath });
 const router = express.Router();
 
+//ensureParams
+const numberIdOnParam = ensureParams().onParam(['id']).shouldNumber(['id']).build();
+const numberIdOnQuery = ensureParams().onQuery(['id']).shouldNumber(['id']).build();
 
 //Item--------
 router.get('/item', itemController.getItems);
@@ -56,9 +59,9 @@ router.get('/recipe/:id', recipeController.getById);
 
 
 //Tags--------
-router.get('/tag', tagController.searchTags);
-router.get('/tag/id/:id', tagController.getById);
-router.get('/tag/recipe/:id', tagController.getRecipes);
+router.get('/tag', numberIdOnQuery, tagController.searchTags);
+router.get('/tag/id/:id', numberIdOnParam, tagController.getById);
+router.get('/tag/recipe/:id', numberIdOnParam, tagController.getRecipes);
 
 //admin--------
 router.get('/admin/db/init', adminController.initDB);

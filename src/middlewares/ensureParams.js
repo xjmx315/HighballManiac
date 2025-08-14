@@ -1,6 +1,6 @@
 //ensureParams.js
 
-import CommonResponse from "../prototype/commonResponse";
+import CommonResponse from "../prototype/commonResponse.js";
 
 function _checkObj(obj, arr) {
     for (const element of arr) { 
@@ -42,8 +42,8 @@ function ensureParams () {
             return this;
         },
         build() {
+            console.log('ensureParams build! with', required);
             return (req, res, next) => {
-                console.log('ensureParams build! with', required);
                 //쿼리 검사
                 const missingQuery = _checkObj(req.query, required.query);
                 if (missingQuery) {
