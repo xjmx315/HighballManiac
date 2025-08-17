@@ -198,6 +198,88 @@ describe('deleteTag', () => {
     });
 });
 
+describe('setTags', () => {
+    const req = {
+        headers: {},
+        userInfo: { name: "sample user name", userId: 1},
+        body: {
+            recipeId: 1,
+            tagList: [1, 2, 4]
+        }
+    };
+    const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+    };
+
+    beforeAll(() => {
+        tagService.getById.mockImplementation((id) => {
+            return new Promise((resolve, reject) => {
+                if (id <= 50){
+                    resolve({ data: "this is sample user data" });
+                }
+                else{
+                    resolve(false);
+                }
+            });
+        })
+    });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('존재하지 않는 레시피 404', async () => {
+        recipeService.getById.mockResolvedValue(undefined);
+        await recipeController.setTags(req, res);
+
+        expect(recipeService.getById).toHaveBeenCalledWith(1);
+        expect(recipeService.setTags).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 404, '존재하지 않는 레시피 입니다. '));
+    });
+
+    test('권한 없음 403', async () => {
+        //userInfo의 id는 1
+        recipeService.getById.mockResolvedValue({user_id: 400}); 
+        await recipeController.setTags(req, res);
+
+        expect(recipeService.getById).toHaveBeenCalledWith(1);
+        expect(recipeService.setTags).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 403, '자신이 업로드한 레시피만 수정할 수 있습니다. '));
+    });
+
+    test('일부 태그 성공 200', async () => {
+        //태그가 존재하지 않을 경우 해당 태그만 실패하면 됨. 
+        recipeService.getById.mockResolvedValue({user_id: 1});
+        const errorReq = JSON.parse(JSON.stringify(req));
+        errorReq.body.tagList.push(400); //존재하지 않는 태그 추가
+        recipeService.setTags.mockResolvedValue([400]);
+        recipeService.getTags.mockResolvedValue([1, 2, 3]);
+
+        await recipeController.setTags(errorReq, res);
+
+        expect(recipeService.getById).toHaveBeenCalledWith(1);
+        expect(recipeService.setTags).toHaveBeenCalledWith(recipeService.addTag, recipeService.deleteTag, 1, [1, 2, 3], [1, 2, 4, 400]);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse().setMessage('일부 태그 삽입에 실패했습니다. ').setData([400]));
+    });
+
+    test('모든 태그 성공 200', async () => {
+        recipeService.getById.mockResolvedValue({user_id: 1});
+        recipeService.setTags.mockResolvedValue([]);
+        recipeService.getTags.mockResolvedValue([1, 2, 3]);
+
+        await recipeController.setTags(req, res);
+
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse());
+        expect(recipeService.getById).toHaveBeenCalledWith(1);
+        expect(recipeService.setTags).toHaveBeenCalledWith(recipeService.addTag, recipeService.deleteTag, 1, [1, 2, 3], [1, 2, 4]);
+        expect(res.status).toHaveBeenCalledWith(200);
+    });
+});
+
 describe('getById', () => {
     const req = {
         params: {

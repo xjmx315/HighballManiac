@@ -50,7 +50,6 @@ const addTag = async (req, res) => {
 
 const deleteTag = async (req, res) => {
     const {recipeId, tagId} = req.body;
-    console.log(req.body);
 
     //레시피 유효성 검사
     const recipeData = await recipeService.getById(recipeId);
@@ -74,6 +73,29 @@ const deleteTag = async (req, res) => {
     catch (e) {
         return res.status(500).json(new CommonResponse(false, 500, '예기치 못한 에러가 발생했습니다. ', e.message));
     }
+};
+
+const setTags = async (req, res) => {
+    const {recipeId, tagList} = req.body;
+    console.log(req.body);
+
+    //레시피 유효성 검사
+    const recipeData = await recipeService.getById(recipeId);
+    if (!recipeData) {
+        return res.status(404).json(new CommonResponse(false, 404, '존재하지 않는 레시피 입니다. '));
+    }
+    if (recipeData.user_id !== req.userInfo.userId) {
+        return res.status(403).json(new CommonResponse(false, 403, '자신이 업로드한 레시피만 수정할 수 있습니다. '));
+    }
+    const recipeTags = await recipeService.getTags(recipeId);
+
+    //recipe service 호출
+    const failed = await recipeService.setTags(recipeService.addTag, recipeService.deleteTag, recipeId, recipeTags, tagList);
+    
+    if (failed.length === 0) {
+        return res.status(200).json(new CommonResponse());
+    }
+    return res.status(200).json(new CommonResponse().setMessage('일부 태그 삽입에 실패했습니다. ').setData(failed));
 };
 
 const getById = async (req, res) => {
@@ -139,6 +161,7 @@ export default {
     newRecipe,
     addTag,
     deleteTag,
+    setTags,
     getById,
     getTags,
     getPopualer,

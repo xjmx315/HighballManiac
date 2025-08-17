@@ -41,6 +41,10 @@ const deleteTag = async (recipeId, tagId) => {
     }
 };
 
+const setTags = async (addFunc, deleteFunc, recipeId, tagListFrom, tagListTo) => {
+
+};
+
 const getById = async (id) => {
     try {
         const result = await recipeModel.getById(id);
@@ -102,6 +106,7 @@ export default {
     newRecipe,
     addTag,
     deleteTag,
+    setTags,
     getById,
     getTags,
     getPopualer,

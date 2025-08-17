@@ -48,6 +48,10 @@ router.delete('/user', usersController.deleteUser);
 router.post('/recipe', authentication, recipeController.newRecipe);
 router.post('/recipe/tag', authentication, recipeController.addTag);
 router.delete('/recipe/tag', authentication, recipeController.deleteTag);
+router.put('/recipe/tag', 
+    authentication, 
+    ensureParams().onBody(['recipeId', 'tagList']).shouldNumber(['recipeId']).build(), 
+    recipeController.setTags);
 router.get('/recipe/tag/:id', recipeController.getTags);
 router.get('/recipe/popualer', recipeController.getPopualer);
 router.get('/recipe/newest', recipeController.getNewest);
