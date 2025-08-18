@@ -115,6 +115,56 @@ describe('deleteTag', () => {
     });
 });
 
+describe('setTags', () => {
+    const addFunc = jest.fn();
+    const deleteFunc = jest.fn();
+
+    beforeAll(() => {
+        deleteFunc.mockImplementation((recipeId, id) => {
+            return new Promise((resolve, reject) => {
+                if (id <= 50){
+                    resolve(true);
+                }
+                else{
+                    resolve(false);
+                }
+            });
+        });
+
+        addFunc.mockImplementation((recipeid, id) => {
+            return new Promise((resolve, reject) => {
+                if (id <= 50){
+                    resolve(true);
+                }
+                else{
+                    resolve(false);
+                }
+            });
+        });
+    });
+    
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('전체 작업 성공 []', async () => {
+        const result = await recipeService.setTags(addFunc, deleteFunc, 1, [1, 2, 3], [1, 2, 4]);
+
+        expect(addFunc).toHaveBeenNthCalledWith(1, 1, 4);
+        expect(deleteFunc).toHaveBeenNthCalledWith(1, 1, 3);
+        expect(result).toEqual([]);
+    });
+
+    test('일부 작업 성공 [faileds]', async () => {
+        const result = await recipeService.setTags(addFunc, deleteFunc, 1, [1, 2, 3], [1, 2, 4, 400]);
+
+        expect(addFunc).toHaveBeenNthCalledWith(1, 1, 4);
+        expect(addFunc).toHaveBeenNthCalledWith(2, 1, 400);
+        expect(deleteFunc).toHaveBeenNthCalledWith(1, 1, 3);
+        expect(result).toEqual([400]);
+    });
+});
+
 describe('getById', () => {
     beforeEach(() => {
         jest.clearAllMocks();

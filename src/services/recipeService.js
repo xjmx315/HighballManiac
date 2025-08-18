@@ -32,7 +32,6 @@ const addTag = async (recipeId, tagId) => {
 const deleteTag = async (recipeId, tagId) => {
     try {
         const result = await recipeModel.deleteTag(recipeId, tagId);
-        console.log(result);
         return true;
     }
     catch (e) {
@@ -42,7 +41,26 @@ const deleteTag = async (recipeId, tagId) => {
 };
 
 const setTags = async (addFunc, deleteFunc, recipeId, tagListFrom, tagListTo) => {
+    const fromSet = new Set(tagListFrom);
+    const toSet = new Set(tagListTo);
 
+    const faileds = [];
+    
+    //from에는 있고 to에는 없는 요소는 delete
+    const deleteProcess = tagListFrom.filter(item => !toSet.has(item)).map(item => deleteFunc(recipeId, item).then((result) => {if (!result) faileds.push(item)}));
+
+    //to에는 있고 from에는 없는 요소는 add
+    const addProcess = tagListTo.filter(item => !fromSet.has(item)).map(item => addFunc(recipeId, item).then((result) => {if (!result) faileds.push(item)}));
+
+    try {
+        await Promise.all(deleteProcess);
+        await Promise.all(addProcess);
+        return faileds;
+    }
+    catch (e) {
+        console.error(e);
+        return faileds;
+    }
 };
 
 const getById = async (id) => {
