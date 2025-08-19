@@ -63,7 +63,7 @@ router.get('/recipe/:id', recipeController.getById);
 
 
 //Tags--------
-router.get('/tag', numberIdOnQuery, tagController.searchTags);
+router.get('/tag', ensureParams().onQuery(['name']).build(), tagController.searchTags);
 router.get('/tag/id/:id', numberIdOnParam, tagController.getById);
 router.get('/tag/recipe/:id', numberIdOnParam, tagController.getRecipes);
 
