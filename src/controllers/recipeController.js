@@ -6,7 +6,7 @@ import tagService from '../services/tagService.js';
 
 const newRecipe = async (req, res) => {
     //body 필수 항목 검사
-    const requiredField = ['name', 'description', 'recipe', 'alcohol', 'ingredients', 'items'];
+    const requiredField = ['name', 'description', 'recipe', 'alcohol', 'ingredients', 'items', 'tags'];
     for (const key of requiredField) {
         if (!(key in req.body)) {
             return res.status(400).json(new CommonResponse(false, 400, `필드 '${key}'이(가) 누락되었습니다. `));

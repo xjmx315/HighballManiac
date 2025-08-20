@@ -2,7 +2,7 @@
 
 import db from './db.js';
 
-const newRecipe = async ({ name, description, recipe, alcohol, image, ingredients, items, userId }) => {
+const newRecipe = async ({ name, description, recipe, alcohol, image, ingredients, items, userId, tags }) => {
     const [result] = await db.execute(
         'INSERT INTO recipes (user_id, name, description, recipe, alcohol_percentage, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
         [userId, name, description, recipe, alcohol, image]
@@ -21,6 +21,13 @@ const newRecipe = async ({ name, description, recipe, alcohol, image, ingredient
         await db.execute(
             'INSERT INTO recipes_items (recipe_id, item_id) VALUES (?, ?)', 
             [recipe_id, item_id]
+        );
+    }
+
+    for (const tag_id of tags) {
+        await db.execute(
+            'INSERT INTO recipes_tags (recipe_id, tag_id) VALUES (?, ?)', 
+            [recipe_id, tag_id]
         );
     }
 
