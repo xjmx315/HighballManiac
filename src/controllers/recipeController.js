@@ -125,9 +125,6 @@ const getById = async (req, res) => {
 
 const getTags = async (req, res) => {
     const id = req.params.id;
-    if (!id) {
-        return res.status(400).json(new CommonResponse(false, 400, 'id를 포함해야 합니다. '));
-    }
     
     const result = await recipeService.getTags(id);
     if (!result) {
@@ -136,26 +133,37 @@ const getTags = async (req, res) => {
     return res.status(200).json(new CommonResponse().setData(result));
 };
 
-const getPopualer = (req, res) => {
+const getItemsAndIngredients = async (req, res) => {
+    const id = req.params.id;
 
+    const result = await recipeService.getItemsAndIngredients(id, recipeService.getItems, recipeService.getIngredients);
+    if (!result) {
+        return res.status(404).json(new CommonResponse(false, 404, 'id 또는 등록된 태그가 없습니다. '));
+    }
+    return res.status(200).json(new CommonResponse().setData(result));
+};
+
+const getPopualer = (req, res) => {
+    return res.status(500).json(new CommonResponse(false, 500, '아직 구현되지 않은 기능입니다. '));
 };
 
 const getNewest = (req, res) => {
-
+    return res.status(500).json(new CommonResponse(false, 500, '아직 구현되지 않은 기능입니다. '));
 };
 
 const getRandom = (req, res) => {
-
+    return res.status(500).json(new CommonResponse(false, 500, '아직 구현되지 않은 기능입니다. '));
 };
 
 const searchRecipeByName = (req, res) => {
-
+    return res.status(500).json(new CommonResponse(false, 500, '아직 구현되지 않은 기능입니다. '));
 };
 
-const getRecipeByCategory = (req, res) => {
+const searchByIngredient = (req, res) => {
+    const {items} = req.query; //"1,2,4"
 
+    res.status(200).json(new CommonResponse().setData({items}));
 };
-
 
 export default {
     newRecipe,
@@ -164,9 +172,10 @@ export default {
     setTags,
     getById,
     getTags,
+    getItemsAndIngredients,
     getPopualer,
     getNewest,
     getRandom,
     searchRecipeByName,
-    getRecipeByCategory,
+    searchByIngredient
 };

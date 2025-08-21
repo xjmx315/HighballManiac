@@ -62,6 +62,22 @@ const getTags = async (id) => {
     return tags;
 };
 
+const getItems = async (id) => {
+    const [items] = await db.execute(
+        'SELECT I.* FROM recipes_items AS RI JOIN items AS I ON RI.item_id = I.id WHERE RI.recipe_id = ?;',
+        [id]
+    );
+    return items;
+};
+
+const getIngredients = async (id) => {
+    const [ingredients] = await db.execute(
+        'SELECT I.* FROM recipes_ingredients AS RI JOIN ingredients AS I ON RI.ingredient_id = I.id WHERE RI.recipe_id = ?;',
+        [id]
+    );
+    return ingredients;
+};
+
 const searchRecipeByName = async (name) => {
     const [recipe] = await db.execute(
         'SELECT * FROM recipes WHERE name = ?',
@@ -76,5 +92,7 @@ export default {
     deleteTag,
     getById,
     getTags,
+    getItems, 
+    getIngredients, 
     searchRecipeByName
 }

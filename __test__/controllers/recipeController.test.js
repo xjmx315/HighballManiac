@@ -20,7 +20,8 @@ describe('newRecipe', () => {
             recipe: '.',
             alcohol: '.',
             ingredients: [],
-            items: []
+            items: [],
+            tags: []
         }
     };
     const res = {
@@ -64,7 +65,8 @@ describe('newRecipe', () => {
             alcohol: '.',
             ingredients: [],
             items: [],
-            userId: 1
+            userId: 1,
+            tags: []
         });
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith(new CommonResponse().setCode(201).setData({ id: 1 }));
@@ -353,16 +355,6 @@ describe('getTags', () => {
         jest.clearAllMocks();
     });
 
-    test('필수 항목 누락시 400', async () => {
-        const errorReq = JSON.parse(JSON.stringify(req));
-        delete errorReq.params.id;
-
-        await recipeController.getTags(errorReq, res);
-
-        expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 400, "id를 포함해야 합니다. "));
-    });
-
     test('존재하지 않는 아이디 요청시 404', async () => {
         recipeService.getTags.mockResolvedValue(undefined);
 
@@ -382,5 +374,43 @@ describe('getTags', () => {
         expect(recipeService.getTags).toHaveBeenCalledWith(1);
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData(tagData));
+    });
+});
+
+describe('getItemsAndIngredients', () => {
+    const req = {
+        params: {
+            id: 1
+        }
+    };
+    const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+    };
+    
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('요청 실패 404', async () => {
+        recipeService.getItemsAndIngredients.mockResolvedValue(undefined);
+
+        await recipeController.getItemsAndIngredients(req, res);
+
+        expect(recipeService.getItems).toHaveBeenCalledWith(1);
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 404, "id 또는 등록된 태그가 없습니다. "));
+    });
+
+    test('성공적 검색 200', async () => {
+        //ingredient에는 id가 +100 됩니다!
+        const itemData = [{id: 101, name: '바카디 모히또', image: '~~', discription: '라임향의 달달한 리큐르 입니다. '}];
+        recipeService.getItemsAndIngredients.mockResolvedValue(itemData);
+
+        await recipeController.getItemsAndIngredients(req, res);
+
+        expect(recipeService.getItemsAndIngredients).toHaveBeenCalledWith(1);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData(itemData));
+        expect(res.status).toHaveBeenCalledWith(200);
     });
 });

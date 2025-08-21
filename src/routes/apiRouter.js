@@ -52,15 +52,16 @@ router.put('/recipe/tag',
     authentication, 
     ensureParams().onBody(['recipeId', 'tagList']).shouldNumber(['recipeId']).build(), 
     recipeController.setTags);
-router.get('/recipe/tag/:id', recipeController.getTags);
+router.get('/recipe/tag/:id', numberIdOnParam, recipeController.getTags);
+router.get('/recipe/ingredients/:id', numberIdOnParam, recipeController.getItemsAndIngredients);
 router.get('/recipe/popualer', recipeController.getPopualer);
 router.get('/recipe/newest', recipeController.getNewest);
 router.get('/recipe/random', recipeController.getRandom);
 router.get('/recipe/search', recipeController.searchRecipeByName);
-router.get('/recipe/category', recipeController.getRecipeByCategory);
-//router.get('/recipe/including', recipeController.searchByIngredient);
+router.get('/recipe/including', 
+    ensureParams().onQuery(['items']).build(), 
+    recipeController.searchByIngredient);
 router.get('/recipe/:id', recipeController.getById);
-
 
 //Tags--------
 router.get('/tag', ensureParams().onQuery(['name']).build(), tagController.searchTags);

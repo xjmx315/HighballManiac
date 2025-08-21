@@ -2,6 +2,12 @@
 
 import recipeModel from "../models/recipeModel.js";
 
+const _itemPingr = (items, ingrs) => {
+    //item의 id에 +100을 해서 병합
+    const tmp = ingrs.map(value => { return {...value, id: value.id+100} });
+    return [...items, ...tmp];
+};
+
 const newRecipe = async (recipe) => {
     if (!recipe.image) {
         recipe.image = '';
@@ -91,6 +97,52 @@ const getTags = async (id) => {
     }
 };
 
+const getItems = async (id) => {
+    try {
+        const result = await recipeModel.getItems(id);
+        if (result.length === 0) {
+            return undefined;
+        }
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+};
+
+const getIngredients = async (id) => {
+    try {
+        const result = await recipeModel.getIngredients(id);
+        if (result.length === 0) {
+            return undefined;
+        }
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+};
+
+const getItemsAndIngredients = async (id, itemFunc, ingredientFunc) => {
+    try {
+        const items = await itemFunc(id);
+        const ingredients = await ingredientFunc(id);
+
+        //ingredients에 +100 하여 병합
+        const result = _itemPingr(items, ingredients);
+        if (result.length === 0) {
+            return undefined;
+        }
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+};
+
 const searchRecipeByName = async (name) => {
     try {
         const result = await recipeModel.searchRecipeByName(name);
@@ -127,6 +179,9 @@ export default {
     setTags,
     getById,
     getTags,
+    getItems,
+    getIngredients,
+    getItemsAndIngredients,
     getPopualer,
     getNewest,
     getRandom,

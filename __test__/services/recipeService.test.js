@@ -216,6 +216,84 @@ describe('getTags', () => {
     });
 });
 
+describe('getItems', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('존재하지 않는 아이디 undifine 반환', async () => {
+        recipeModel.getById.mockResolvedValue([]);
+        recipeModel.getItems.mockResolvedValue([]);
+
+        const result = await recipeService.getItems(1);
+
+        expect(recipeModel.getItems).toHaveBeenCalledWith(1);
+        expect(result).toBe(undefined);
+    });
+
+    test('정상 태그 리스트 반환', async () => {
+        const itemData = [{id: 1, name: '바카디 모히또', image: '~~', discription: '라임향의 달달한 리큐르 입니다. '}];
+        recipeModel.getItems.mockResolvedValue(tagData);
+
+        const result = await recipeService.getItems(1);
+
+        expect(recipeModel.getItems).toHaveBeenCalledWith(1);
+        expect(result).toEqual(tagData);
+    });
+});
+
+describe('getIngredients', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('존재하지 않는 아이디 undifine 반환', async () => {
+        recipeModel.getById.mockResolvedValue([]);
+        recipeModel.getItems.mockResolvedValue([]);
+
+        const result = await recipeService.getItems(1);
+
+        expect(recipeModel.getItems).toHaveBeenCalledWith(1);
+        expect(result).toBe(undefined);
+    });
+
+    test('정상 태그 리스트 반환', async () => {
+        const itemData = [{id: 1, name: '바카디 모히또', image: '~~', discription: '라임향의 달달한 리큐르 입니다. '}];
+        recipeModel.getItems.mockResolvedValue(tagData);
+
+        const result = await recipeService.getItems(1);
+
+        expect(recipeModel.getItems).toHaveBeenCalledWith(1);
+        expect(result).toEqual(tagData);
+    });
+});
+
+describe('getItemsAndIngredients', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('존재하지 않는 아이디 undifine 반환', async () => {
+        recipeModel.getById.mockResolvedValue([]);
+        recipeModel.getItems.mockResolvedValue([]);
+
+        const result = await recipeService.getItems(1);
+
+        expect(recipeModel.getItems).toHaveBeenCalledWith(1);
+        expect(result).toBe(undefined);
+    });
+
+    test('정상 태그 리스트 반환', async () => {
+        const itemData = [{id: 1, name: '바카디 모히또', image: '~~', discription: '라임향의 달달한 리큐르 입니다. '}];
+        recipeModel.getItems.mockResolvedValue(tagData);
+
+        const result = await recipeService.getItems(1);
+
+        expect(recipeModel.getItems).toHaveBeenCalledWith(1);
+        expect(result).toEqual(tagData);
+    });
+});
+
 /*
 describe('searchRecipeByName', () => {
     beforeEach(() => {
