@@ -167,7 +167,7 @@ const searchByIngredient = async (req, res) => {
     if (result.err) {
         res.status(500).json(new CommonResponse(false, 500, result.err));
     }
-    return res.status(200).json(new CommonResponse().setData({result}));
+    return res.status(200).json(new CommonResponse().setData(result));
 };
 
 export default {
