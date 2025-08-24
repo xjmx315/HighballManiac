@@ -159,10 +159,15 @@ const searchRecipeByName = (req, res) => {
     return res.status(500).json(new CommonResponse(false, 500, '아직 구현되지 않은 기능입니다. '));
 };
 
-const searchByIngredient = (req, res) => {
-    const {items} = req.query; //"1,2,4"
-
-    res.status(200).json(new CommonResponse().setData({items}));
+const searchByIngredient = async (req, res) => {
+    //"1,102,104" => item[1] ingredient[2, 4]
+    const {items} = req.query; 
+    
+    const result = await recipeService.searchByIngredient(items);
+    if (result.err) {
+        res.status(500).json(new CommonResponse(false, 500, result.err));
+    }
+    return res.status(200).json(new CommonResponse().setData({result}));
 };
 
 export default {

@@ -86,6 +86,55 @@ const searchRecipeByName = async (name) => {
     return recipe;
 };
 
+const searchByIngredient = async (items, ingredients) => {
+    if ((!items || items.length === 0) && (!ingredients || ingredients.length === 0)) {
+        return [];
+    }
+
+    //동적 플레이스홀더
+    const itemsPlaceholders = items && items.length > 0 ? items.map(() => '?').join(',') : 'NULL';
+    const ingredientsPlaceholders = ingredients && ingredients.length > 0 ? ingredients.map(() => '?').join(',') : 'NULL';
+
+    const query = `
+        SELECT
+        r.id,
+        r.name,
+        r.image,
+        COUNT(DISTINCT joined_items.id, joined_items.type) AS matched_count
+        FROM
+        recipes r
+        INNER JOIN (
+        -- 사용자가 제공한 재료(ingredients)와 레시피의 관계
+        SELECT ri.recipe_id, ri.ingredient_id AS id, 'ingredient' AS type
+        FROM recipes_ingredients ri
+        WHERE ri.ingredient_id IN (${ingredientsPlaceholders})
+        UNION
+        -- 사용자가 제공한 아이템(items)과 레시피의 관계
+        SELECT ritem.recipe_id, ritem.item_id AS id, 'item' AS type
+        FROM recipes_items ritem
+        WHERE ritem.item_id IN (${itemsPlaceholders})
+        UNION
+        -- 재료의 상위 개념인 아이템과 레시피의 관계
+        SELECT ritem_ingredient.recipe_id, ritem_ingredient.item_id AS id, 'item' AS type
+        FROM items_ingredients ii
+        JOIN recipes_items ritem_ingredient ON ii.item_id = ritem_ingredient.item_id
+        WHERE ii.ingredient_id IN (${ingredientsPlaceholders})
+        ) AS joined_items ON r.id = joined_items.recipe_id
+        GROUP BY
+        r.id
+        ORDER BY
+        matched_count DESC;`
+
+    const params = [
+        ...(ingredients || []),
+        ...(items || []),
+        ...(ingredients || [])
+    ];
+
+    const [recipe] = await db.execute(query, params);
+    return recipe;
+};
+
 export default {
     newRecipe,
     addTag,
@@ -94,5 +143,6 @@ export default {
     getTags,
     getItems, 
     getIngredients, 
-    searchRecipeByName
+    searchRecipeByName,
+    searchByIngredient
 }

@@ -2,11 +2,28 @@
 
 import recipeModel from "../models/recipeModel.js";
 
-const _itemPingr = (items, ingrs) => {
+const _joinItemIngre = (items, ingrs) => {
     //item의 id에 +100을 해서 병합
     const tmp = ingrs.map(value => { return {...value, id: value.id+100} });
     return [...items, ...tmp];
 };
+
+const _splitItemIngre = (ids) => {
+    //ids"1,102,104" => item[1] ingredient[2, 4]
+    const items = [];
+    const ingredients = [];
+
+    ids.split(',').map(Number).forEach(element => {
+        if (element > 100) {
+            ingredients.push(element -100);
+        }
+        else {
+            items.push(element);
+        }
+    });
+
+    return {items, ingredients};
+}
 
 const newRecipe = async (recipe) => {
     if (!recipe.image) {
@@ -131,7 +148,7 @@ const getItemsAndIngredients = async (id, itemFunc, ingredientFunc) => {
         const ingredients = await ingredientFunc(id);
 
         //ingredients에 +100 하여 병합
-        const result = _itemPingr(items, ingredients);
+        const result = _joinItemIngre(items, ingredients);
         if (result.length === 0) {
             return undefined;
         }
@@ -154,6 +171,18 @@ const searchRecipeByName = async (name) => {
     }
 };
 
+const searchByIngredient = async (ids) => {
+    //ids"1,102,104" => item[1] ingredient[2, 4]
+    const {items, ingredients} = _splitItemIngre(ids);
+
+    try{
+        const recipes = await recipeModel.searchByIngredient(items, ingredients);
+        return recipes;
+    }
+    catch (e) {
+        return {err: e};
+    }
+};
 
 const getPopualer = async () => {
 
@@ -167,11 +196,6 @@ const getRandom = async () => {
 
 };  
 
-const getRecipeByCategory = async () => {
-
-};  
-
-
 export default {
     newRecipe,
     addTag,
@@ -182,9 +206,9 @@ export default {
     getItems,
     getIngredients,
     getItemsAndIngredients,
+    searchRecipeByName,
+    searchByIngredient,
     getPopualer,
     getNewest,
     getRandom,
-    searchRecipeByName,
-    getRecipeByCategory
 };
