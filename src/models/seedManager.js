@@ -165,7 +165,12 @@ const initDB = async () => {
   const result = [];
 
   //테이블 초기화
-  result.push(await executeSqlFile('./src/models/sql/clear.sql', db));
+  //이전 테이블 드롭 방식의 초기화 대신 스키마 드롭 방식을 사용합니다. 
+  //result.push(await executeSqlFile('./src/models/sql/clear.sql', db));
+  const DBName = process.env.DBNAME;
+  await db.query(`DROP DATABASE IF EXISTS ${DBName};`);
+  await db.query(`CREATE DATABASE ${DBName};`);
+  await db.query(`USE ${DBName}`);
   result.push(await executeSqlFile('./src/models/sql/schema.sql', db));
   
   //seed 삽입
