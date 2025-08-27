@@ -14,7 +14,6 @@ describe('/api/admin/db/init', () => {
 
     //get 요청만 허용하며 body adminPassword 필드에 담긴 비밀번호로 인증을 진행한다. 
     test('get 올바른 admin 비밀번호를 입력했을때', async () => {
-        usersService.login.mockResolvedValue(1);
 
         const response = await request(app)
             .get('/api/admin/db/init')
@@ -33,7 +32,6 @@ describe('/api/admin/db/init', () => {
     });
 
     test('get 올바르지 않은은 admin 비밀번호를 입력했을때', async () => {
-        usersService.login.mockResolvedValue(false);
 
         const response = await request(app)
             .get('/api/admin/db/init')

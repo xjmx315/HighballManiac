@@ -12,13 +12,9 @@ const csvSeedPath = process.env.CSVPATH || 'csvFiles/';
 
 const initDB = async (req, res) => {
     //테이블을 모두 DROP하고 처음부터 다시 만든다. 스키마 구조 변경시 사용. 
-    console.log(req.body);
     const {adminPassword} = req.body;
-    if (!adminPassword) {
-        return res.status(401).json(new CommonResponse(false, 401, "관리자 비밀번호를 포함해야 합니다. "));
-    }
 
-    const adminCheck = await usersService.login(adminPassword, "admin");
+    const adminCheck = adminPassword == process.env.ADMINPW;
 
     if (!adminCheck) {
         return res.status(401).json(new CommonResponse(false, 401, "비밀번호가 올바르지 않습니다. "));

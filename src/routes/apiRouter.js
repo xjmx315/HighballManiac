@@ -69,7 +69,7 @@ router.get('/tag/id/:id', numberIdOnParam, tagController.getById);
 router.get('/tag/recipe/:id', numberIdOnParam, tagController.getRecipes);
 
 //admin--------
-router.get('/admin/db/init', adminController.initDB);
+router.get('/admin/db/init', ensureParams().onBody(['adminPassword']).build(), adminController.initDB);
 router.get('/admin/db/export/:tableName', validateTable, adminController.exportTable);
 router.post('/admin/db/update/:tableName', validateTable, upload.single('file'), adminController.updateTable);
 router.get('/admin/db/delete/:tableName', validateTable, adminController.deleteTable);
