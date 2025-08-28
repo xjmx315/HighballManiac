@@ -174,11 +174,11 @@ const initDB = async () => {
   result.push(await executeSqlFile('./src/models/sql/schema.sql', db));
   
   //seed 삽입
-  await _updateTablefromCsv('users', './seeds/Users_seed.csv');
-  await _updateTablefromCsv('ingredients', './seeds/Ingredients_seed.csv');
-  await _updateTablefromCsv('items', './seeds/Items_seed.csv');
-  await _updateTablefromCsv('items_ingredients', './seeds/Items_Ingredients_seed.csv');
-  await _updateTablefromCsv('tags', './seeds/Tags_seed.csv');
+  result.push(await _updateTablefromCsv('users', './seeds/Users_seed.csv'));
+  result.push(await _updateTablefromCsv('ingredients', './seeds/Ingredients_seed.csv'));
+  result.push(await _updateTablefromCsv('items', './seeds/Items_seed.csv'));
+  result.push(await _updateTablefromCsv('items_ingredients', './seeds/Items_Ingredients_seed.csv'));
+  result.push(await _updateTablefromCsv('tags', './seeds/Tags_seed.csv'));
 
   return result;
 };
