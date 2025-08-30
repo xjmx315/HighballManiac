@@ -199,7 +199,13 @@ const getPopualer = async () => {
 };
 
 const getNewest = async () => {
-
+    try{
+        const recipes = await recipeModel.getNewest();
+        return recipes;
+    }
+    catch (e) {
+        return {err: e};
+    }
 };  
 
 const getRandom = async () => {

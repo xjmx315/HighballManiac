@@ -143,6 +143,12 @@ const getByUserId = async (id) => {
     return recipe;
 };
 
+const getNewest = async () => {
+    const [recipe] = await db.execute(
+        'SELECT name, id, image FROM highball_maniac.recipes ORDER BY id DESC LIMIT 4;');
+    return recipe;
+};
+
 export default {
     newRecipe,
     addTag,
@@ -153,5 +159,6 @@ export default {
     getIngredients, 
     searchRecipeByName,
     searchByIngredient,
-    getByUserId
+    getByUserId,
+    getNewest
 }
