@@ -206,10 +206,16 @@ const getNewest = async () => {
     catch (e) {
         return {err: e};
     }
-};  
+};
 
 const getRandom = async () => {
-
+    try{
+        const recipes = await recipeModel.getRandom();
+        return recipes;
+    }
+    catch (e) {
+        return {err: e};
+    }
 };  
 
 export default {

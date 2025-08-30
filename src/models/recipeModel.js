@@ -149,6 +149,12 @@ const getNewest = async () => {
     return recipe;
 };
 
+const getRandom = async () => {
+    const [recipe] = await db.execute(
+        'SELECT name, id, image FROM highball_maniac.recipes ORDER BY RAND() DESC LIMIT 4;');
+    return recipe;
+};
+
 export default {
     newRecipe,
     addTag,
@@ -160,5 +166,6 @@ export default {
     searchRecipeByName,
     searchByIngredient,
     getByUserId,
-    getNewest
+    getNewest,
+    getRandom
 }

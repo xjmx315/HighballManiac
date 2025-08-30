@@ -155,8 +155,12 @@ const getNewest = async (req, res) => {
     return res.status(200).json(new CommonResponse().setData(result));
 };
 
-const getRandom = (req, res) => {
-    return res.status(500).json(new CommonResponse(false, 500, '아직 구현되지 않은 기능입니다. '));
+const getRandom = async (req, res) => {
+    const result = await recipeService.getRandom();
+    if (result.err) {
+        res.status(500).json(new CommonResponse(false, 500, result.err));
+    }
+    return res.status(200).json(new CommonResponse().setData(result));
 };
 
 const searchRecipeByName = (req, res) => {
