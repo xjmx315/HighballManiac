@@ -43,10 +43,18 @@ const deleteUser = async (userId) => {
     return result;
 };
 
+const searchUser = async (name) => {
+    const [userData] = await db.execute(
+        'SELECT id, name FROM users WHERE name LIKE ?', [`${name}%`]
+    );
+    return userData;
+};
+
 export default {
-    getIdByName: getIdByName,
-    getPasswordById: getPasswordById,
-    getCreatedDateById: getCreatedDateById,
-    addUser: addUser,
-    deleteUser: deleteUser
+    getIdByName,
+    getPasswordById,
+    getCreatedDateById,
+    addUser,
+    deleteUser,
+    searchUser
 };

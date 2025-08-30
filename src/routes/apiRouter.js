@@ -41,6 +41,7 @@ router.post('/user/login', usersController.login);
 router.get('/user', usersController.getProfile);
 router.get('/user/tokenCheck', usersController.tokenCheck);
 router.delete('/user', usersController.deleteUser);
+router.get('/user/search/:name', ensureParams().onParam(['name']).build(), usersController.searchUser);
 //계정 정보는 db에서 삭제되나 해당 유저가 올린 레시피도 삭제되게 해야함. 
 
 

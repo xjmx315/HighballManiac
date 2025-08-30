@@ -101,10 +101,22 @@ const tokenCheck = async (req, res) => {
     }
 };
 
+const searchUser = async (req, res) => {
+    const name = req.params.name;
+
+    const userData = await usersService.searchUser(name);
+
+    if (userData.err) {
+        return res.status(500).json(new CommonResponse(false, 500, users.err));
+    }
+    return res.status(200).json(new CommonResponse().setData(userData));
+};
+
 export default {
-    newUser: newUser,
-    login: login,
-    deleteUser: deleteUser,
-    getProfile: getProfile,
-    tokenCheck: tokenCheck
+    newUser,
+    login,
+    deleteUser,
+    getProfile,
+    tokenCheck,
+    searchUser
 };

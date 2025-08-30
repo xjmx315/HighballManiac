@@ -127,12 +127,25 @@ const deleteUser = async (password, token) => {
     return {isSucceed: false, message: "비밀번호가 올바르지 않습니다. "};
 };
 
+const searchUser = async (name) => {
+    try {
+        const userData = await users.searchUser(name);
+        console.log(userData);
+        return userData;
+    }
+    catch (e) {
+        console.log(e);
+        return {err: e};
+    }
+};
+
 export default {
-    getIdByName: getIdByName,
-    getCreatedDateById: getCreatedDateById,
-    addUser: addUser,
-    login: login,
-    getToken: getToken,
-    authUser: authUser,
-    deleteUser: deleteUser,
+    getIdByName,
+    getCreatedDateById,
+    addUser,
+    login,
+    getToken,
+    authUser,
+    deleteUser,
+    searchUser
 }
