@@ -135,6 +135,14 @@ const searchByIngredient = async (items, ingredients) => {
     return recipe;
 };
 
+const getByUserId = async (id) => {
+    const [recipe] = await db.execute(
+        'SELECT name, id, image FROM recipes WHERE user_id = ?',
+        [id]
+    );
+    return recipe;
+};
+
 export default {
     newRecipe,
     addTag,
@@ -144,5 +152,6 @@ export default {
     getItems, 
     getIngredients, 
     searchRecipeByName,
-    searchByIngredient
+    searchByIngredient,
+    getByUserId
 }

@@ -1,10 +1,13 @@
 //recipeController.test.js
 
+//moking
+jest.mock("../../src/services/recipeService");
+jest.mock("../../src/services/tagService");
+jest.mock("../../src/models/db");
+
 //의존성
 import CommonResponse from "../../src/prototype/commonResponse";
-jest.mock("../../src/services/recipeService");
 import recipeService from "../../src/services/recipeService";
-jest.mock("../../src/services/tagService");
 import tagService from "../../src/services/tagService";
 
 //테스트 대상
@@ -413,4 +416,40 @@ describe('getItemsAndIngredients', () => {
         expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData(itemData));
         expect(res.status).toHaveBeenCalledWith(200);
     });
+
+    describe('getByUserId', () => {
+        const req = {
+            params: {
+                id: 1
+            }
+        };
+        const res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn()
+        };
+        
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        test('알 수 없는 에러', () => {
+            recipeService.getByUserId.mockResolvedValue({err: "에러 발생!"});
+
+            recipeController.getByUserId(req, res);
+
+            expect(recipeService.getByUserId).toHaveBeenCalledWith(1);
+            expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 500, "에러 발생!"));
+            expect(res.status).toHaveBeenCalledWith(500);
+        });
+
+        test('요청 성공', () => {
+            recipeService.getByUserId.mockResolvedValue([{name: "진 피즈", recipe: "~~~"}]);
+
+            recipeController.getByUserId(req, res);
+
+            expect(recipeService.getByUserId).toHaveBeenCalledWith(1);
+            expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData([{name: "진 피즈", recipe: "~~~"}]));
+            expect(res.status).toHaveBeenCalledWith(200);
+        });
+    })
 });

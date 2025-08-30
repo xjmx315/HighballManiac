@@ -184,6 +184,16 @@ const searchByIngredient = async (ids) => {
     }
 };
 
+const getByUserId = async (id) => {
+    try{
+        const recipes = await recipeModel.getByUserId(id);
+        return recipes;
+    }
+    catch (e) {
+        return {err: e};
+    }
+};
+
 const getPopualer = async () => {
 
 };
@@ -206,6 +216,7 @@ export default {
     getItems,
     getIngredients,
     getItemsAndIngredients,
+    getByUserId,
     searchRecipeByName,
     searchByIngredient,
     getPopualer,

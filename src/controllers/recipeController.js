@@ -170,6 +170,16 @@ const searchByIngredient = async (req, res) => {
     return res.status(200).json(new CommonResponse().setData(result));
 };
 
+const getByUserId = async (req, res) => {
+    const id = req.params.id;
+    
+    const result = await recipeService.getByUserId(id);
+    if (result.err) {
+        res.status(500).json(new CommonResponse(false, 500, result.err));
+    }
+    return res.status(200).json(new CommonResponse().setData(result));
+};
+
 export default {
     newRecipe,
     addTag,
@@ -182,5 +192,6 @@ export default {
     getNewest,
     getRandom,
     searchRecipeByName,
-    searchByIngredient
+    searchByIngredient,
+    getByUserId
 };

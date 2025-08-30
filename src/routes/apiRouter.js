@@ -46,6 +46,7 @@ router.delete('/user', usersController.deleteUser);
 
 //Recipe--------
 router.post('/recipe', authentication, recipeController.newRecipe);
+//Tag 관련
 router.post('/recipe/tag', authentication, recipeController.addTag);
 router.delete('/recipe/tag', authentication, recipeController.deleteTag);
 router.put('/recipe/tag', 
@@ -53,7 +54,9 @@ router.put('/recipe/tag',
     ensureParams().onBody(['recipeId', 'tagList']).shouldNumber(['recipeId']).build(), 
     recipeController.setTags);
 router.get('/recipe/tag/:id', numberIdOnParam, recipeController.getTags);
+//다양한 기준 검색
 router.get('/recipe/ingredients/:id', numberIdOnParam, recipeController.getItemsAndIngredients);
+router.get('/recipe/writtenby/:id', numberIdOnParam, recipeController.getByUserId);
 router.get('/recipe/popualer', recipeController.getPopualer);
 router.get('/recipe/newest', recipeController.getNewest);
 router.get('/recipe/random', recipeController.getRandom);
