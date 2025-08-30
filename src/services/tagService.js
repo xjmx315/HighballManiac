@@ -38,8 +38,20 @@ const getRecipes = async (id) => {
     }
 };
 
+const getAllTags = async () => {
+    try {
+        const result = await tagModel.getAllTags();
+        return result;
+    }
+    catch (e) {
+        console.log(e);
+        return {err: e};
+    }
+};
+
 export default {
     searchTags,
     getById,
-    getRecipes
+    getRecipes,
+    getAllTags
 };

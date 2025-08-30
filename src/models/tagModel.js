@@ -18,8 +18,14 @@ const getRecipes = async (id) => {
     return recipes;
 };
 
+const getAllTags = async () => {
+    const [recipes] = await db.execute("SELECT * FROM tags;");
+    return recipes;
+};
+
 export default {
     searchTags,
     getById,
-    getRecipes
+    getRecipes,
+    getAllTags
 };

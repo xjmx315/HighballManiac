@@ -43,8 +43,18 @@ const getRecipes = async (req, res) => {
     return res.status(200).json(new CommonResponse().setData(recipes));
 };
 
+const getAllTags = async (req, res) => {
+    const tags = await tagService.getAllTags();
+
+    if (tags.err) {
+        return res.status(500).json(new CommonResponse(false, 500, tags.err));
+    }
+    return res.status(200).json(new CommonResponse().setData(tags));
+};
+
 export default {
     searchTags,
     getById,
-    getRecipes
+    getRecipes,
+    getAllTags
 };

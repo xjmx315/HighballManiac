@@ -70,6 +70,7 @@ router.get('/recipe/:id', recipeController.getById);
 router.get('/tag', ensureParams().onQuery(['name']).build(), tagController.searchTags);
 router.get('/tag/id/:id', numberIdOnParam, tagController.getById);
 router.get('/tag/recipe/:id', numberIdOnParam, tagController.getRecipes);
+router.get('/tag/all', tagController.getAllTags);
 
 //admin--------
 router.get('/admin/db/init', ensureParams().onBody(['adminPassword']).build(), adminController.initDB);
