@@ -1,13 +1,30 @@
-# 🍹 HighballManiac - 칵테일 레시피 공유 플랫폼
+# Highball Maniac
 
-> **Express.js 기반의 RESTful API 서버**  
-> 칵테일 레시피를 공유하고 관리할 수 있는 백엔드 시스템
+> 내가 가진 재료를 기만으로 만들 수 있는 하이볼을 검색할 수 있었으면 좋겠다!
 
-## 📋 프로젝트 개요
+Highball Maniac은 재료, 태그 기반 하이볼 레시피를 제공하는 1인 개발 서비스 입니다.
+Express 기반의 서버로 API를 제공합니다. 
 
-HighballManiac은 칵테일 애호가들을 위한 레시피 공유 플랫폼의 백엔드 API 서버입니다. 사용자 인증, 레시피 CRUD, 태그 시스템, 재료 관리 등 완전한 기능을 갖춘 RESTful API를 제공합니다.
+[FE 바로가기](https://github.com/xjmx315/highball-maniac)
 
-## 🚀 주요 기술 스택
+## API LIST
+
+모든 api는 '/api' 경로 아래에서 제공됩니다. 
+
+### User
+
+|경로|메소드|인자|내용|
+|---|---|---|---|
+|**/user/join**|POST|body: email, password, name|새로운 유저를 생성합니다. |
+|**/user/login**|POST|body: password, name|로그인을 시도하고 로그인 토큰을 반환합니다. |
+
+### Recipe
+
+|경로|메소드|인자|내용|
+|---|---|---|---|
+|**/recipe**|POST|body: name, description, recipe, alcohol, ingredients, items, tags|새로운 레시피를 생성합니다. |
+
+## 주요 기술 스택
 
 ### Backend Framework
 - **Express.js 4.21.2** - Node.js 웹 애플리케이션 프레임워크
@@ -33,7 +50,7 @@ HighballManiac은 칵테일 애호가들을 위한 레시피 공유 플랫폼의
 - **Babel** - ES6+ 코드 변환
 - **dotenv** - 환경 변수 관리
 
-## 🏗️ 아키텍처 구조
+## 아키텍처 구조
 
 ### 계층형 아키텍처
 ```
@@ -48,7 +65,7 @@ HighballManiac은 칵테일 애호가들을 위한 레시피 공유 플랫폼의
 └─────────────────┘
 ```
 
-## 🔧 핵심 기능
+## 핵심 기능
 
 ### 1. 사용자 관리
 - 회원가입/로그인 (JWT 인증)
@@ -76,7 +93,7 @@ HighballManiac은 칵테일 애호가들을 위한 레시피 공유 플랫폼의
 - CSV 파일을 통한 데이터 업데이트
 - 테이블 데이터 내보내기/삭제
 
-## 💡 기술적 특징
+## 기술적 특징
 
 ### 1. 체이닝 패턴을 활용한 미들웨어
 ```javascript
@@ -156,7 +173,7 @@ app.use((req, res, next) => {
 app.use(errorHandler); // 커스텀 에러 핸들러
 ```
 
-## 🗄️ 데이터베이스 설계
+## 데이터베이스 설계
 
 ### 주요 테이블
 - **users** - 사용자 정보
@@ -173,7 +190,7 @@ app.use(errorHandler); // 커스텀 에러 핸들러
 - CASCADE 삭제를 통한 연관 데이터 자동 정리
 - 인덱스를 통한 검색 성능 최적화
 
-## 🧪 테스트
+## 테스트
 
 ### 테스트 환경
 - **Jest** 프레임워크 기반
@@ -189,41 +206,14 @@ npm test
 npm test __test__/api/recipeAPI.test.js
 ```
 
-## 🚀 실행 방법
-
-### 1. 환경 설정
-```bash
-# .env 파일 생성
-DBHOST=localhost
-DBPORT=3306
-DBUSERNAME=your_username
-DBPASSWORD=your_password
-DBNAME=highballmaniac
-PORT=3000
-```
-
-### 2. 의존성 설치
-```bash
-npm install
-```
-
-### 3. 서버 실행
-```bash
-# 개발 모드
-npm start
-
-# 테스트 실행
-npm test
-```
-
-## 🔒 보안 기능
+## 보안
 
 - **JWT 토큰 인증** - 안전한 사용자 인증
 - **비밀번호 해싱** - bcrypt를 통한 보안 강화
 - **CORS 설정** - 허용된 도메인만 접근 가능
 - **입력 검증** - 미들웨어를 통한 파라미터 검증
 
-## 📈 성능 최적화
+## 성능 최적화
 
 - **데이터베이스 연결 풀링** - 연결 재사용
 - **비동기 처리** - Promise 기반 비동기 작업
