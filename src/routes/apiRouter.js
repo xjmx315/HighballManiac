@@ -58,7 +58,7 @@ router.get('/recipe/tag/:id', numberIdOnParam, recipeController.getTags);
 //다양한 기준 검색
 router.get('/recipe/ingredients/:id', numberIdOnParam, recipeController.getItemsAndIngredients);
 router.get('/recipe/writtenby/:id', numberIdOnParam, recipeController.getByUserId);
-router.get('/recipe/popualer', recipeController.getPopualer);
+router.get('/recipe/populer', recipeController.getPopuler);
 router.get('/recipe/newest', recipeController.getNewest);
 router.get('/recipe/random', recipeController.getRandom);
 router.get('/recipe/search', recipeController.searchRecipeByName);
