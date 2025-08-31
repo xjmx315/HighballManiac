@@ -17,21 +17,73 @@ Express 기반의 서버로 API를 제공합니다.
 |---|---|---|---|
 |**/user/join**|POST|body: email, password, name|새로운 유저를 생성합니다. |
 |**/user/login**|POST|body: password, name|로그인을 시도하고 로그인 토큰을 반환합니다. |
+|**/user**|GET|query: name|사용자 프로필을 조회합니다. |
+|**/user/tokenCheck**|GET|header: authorization|토큰 유효성을 확인합니다. |
+|**/user**|DELETE|body: password|사용자 계정을 삭제합니다. |
+|**/user/search/:name**|GET|param: name|이름으로 사용자를 검색합니다. |
+
+### Item
+
+|경로|메소드|인자|내용|
+|---|---|---|---|
+|**/item**|GET|-|모든 아이템 목록을 조회합니다. |
+|**/item/search**|GET|query: name|이름으로 아이템을 검색합니다. |
+
+### Ingredient
+
+|경로|메소드|인자|내용|
+|---|---|---|---|
+|**/ingredient/search**|GET|query: name|이름으로 재료를 검색합니다. |
+|**/ingredient**|GET|query: id|ID로 재료를 조회합니다. |
 
 ### Recipe
 
 |경로|메소드|인자|내용|
 |---|---|---|---|
-|**/recipe**|POST|body: name, description, recipe, alcohol, ingredients, items, tags|새로운 레시피를 생성합니다. |
+|**/recipe**|POST|body: name, description, recipe, alcohol, ingredients, items, tags / header: authorization|새로운 레시피를 생성합니다. |
+|**/recipe/:id**|GET|param: id|ID로 레시피를 조회합니다. |
+|**/recipe/search**|GET|query: name|이름으로 레시피를 검색합니다. |
+|**/recipe/newest**|GET|-|최신 레시피를 조회합니다. |
+|**/recipe/random**|GET|-|랜덤 레시피를 조회합니다. |
+|**/recipe/ingredients/:id**|GET|param: id|레시피에 포함된 재료를 조회합니다. |
+|**/recipe/writtenby/:id**|GET|param: id|특정 사용자가 작성한 레시피를 조회합니다. |
+|**/recipe/including**|GET|query: items|특정 아이템을 포함한 레시피를 검색합니다. |
+
+### Recipe Tag
+
+|경로|메소드|인자|내용|
+|---|---|---|---|
+|**/recipe/tag**|POST|body: recipeId, tagId / header: authorization|레시피에 태그를 추가합니다. |
+|**/recipe/tag**|DELETE|body: recipeId, tagId / header: authorization|레시피에서 태그를 삭제합니다. |
+|**/recipe/tag**|PUT|body: recipeId, tagList / header: authorization|레시피의 태그를 일괄 설정합니다. |
+|**/recipe/tag/:id**|GET|param: id|레시피의 태그 목록을 조회합니다. |
+
+### Tag
+
+|경로|메소드|인자|내용|
+|---|---|---|---|
+|**/tag**|GET|query: name|이름으로 태그를 검색합니다. |
+|**/tag/id/:id**|GET|param: id|ID로 태그를 조회합니다. |
+|**/tag/recipe/:id**|GET|param: id|특정 태그가 포함된 레시피를 조회합니다. |
+|**/tag/all**|GET|-|모든 태그 목록을 조회합니다. |
+
+### Admin
+
+|경로|메소드|인자|내용|
+|---|---|---|---|
+|**/admin/db/init**|GET|body: adminPassword|데이터베이스를 초기화합니다. |
+|**/admin/db/export/:tableName**|GET|param: tableName|테이블 데이터를 CSV로 내보냅니다. |
+|**/admin/db/update/:tableName**|POST|param: tableName, body: file|CSV 파일로 테이블 데이터를 업데이트합니다. |
+|**/admin/db/delete/:tableName**|GET|param: tableName|테이블의 모든 데이터를 삭제합니다. |
 
 ## 주요 기술 스택
 
 ### Backend Framework
-- **Express.js 4.21.2** - Node.js 웹 애플리케이션 프레임워크
+- **Express.js** - Node.js 웹 애플리케이션 프레임워크
 - **ES6+ Modules** - 최신 JavaScript 모듈 시스템 활용
 
 ### Database
-- **MySQL 8.0** - 관계형 데이터베이스
+- **MySQL** - 관계형 데이터베이스
 - **mysql2** - Promise 기반 MySQL 클라이언트
 
 ### Authentication & Security
@@ -76,10 +128,9 @@ Express 기반의 서버로 API를 제공합니다.
 - 레시피 CRUD 작업
 - 태그 기반 분류
 - 재료별 검색
-- 인기/최신/랜덤 레시피 조회
+- 최신/랜덤 레시피 조회
 
 ### 3. 태그 시스템
-- 동적 태그 생성/관리
 - 레시피별 태그 연결
 - 태그 기반 검색
 
