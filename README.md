@@ -226,6 +226,9 @@ app.use(errorHandler); // 커스텀 에러 핸들러
 
 ## 데이터베이스 설계
 
+### ERD
+<img width="1950" height="572" alt="ERD" src="https://github.com/user-attachments/assets/abbe264e-30e2-4a4e-ae4c-9818b56bc640" />
+
 ### 주요 테이블
 - **users** - 사용자 정보
 - **recipes** - 레시피 정보
