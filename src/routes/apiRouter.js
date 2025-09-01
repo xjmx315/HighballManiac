@@ -1,5 +1,29 @@
 //apiRouter.js
 
+/*
+About ensureParams
+-기능
+    1. 필수 파라미터 채크
+    2. 파라미터의 형식 체크(숫자인지)
+-사용법
+    ensureParams().onParam(['id']).shouldNumber(['id']).build();
+    -> .onParam(['id']) : id 필드가 param에 있는지 체크
+    -> .shouldNumber(['id']) : id 필드가 숫자인지 체크
+    -> .build() : 설정된 미들웨어 함수를 반환
+-사용예시
+    1. 변수에 저장해두었다가 사용
+        const numberIdOnParam = ensureParams().onParam(['id']).shouldNumber(['id']).build();
+    2. router에 직접 삽입
+        router.post('/user/join', 
+            ensureParams().onBody(['email', 'password', 'name']).build(),
+            usersController.newUser
+        );
+-기대 효과
+    1. 코드 중복 감소
+    2. 코드 가독성 향상
+    3. 일괄적인 응답 처리
+*/
+
 import express from 'express';
 
 import itemController from '../controllers/itemController.js';
