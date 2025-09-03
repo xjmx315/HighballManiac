@@ -32,6 +32,7 @@ import recipeController from '../controllers/recipeController.js';
 import adminController from '../controllers/adminController.js';
 import ingredientController from '../controllers/ingredientController.js';
 import tagController from '../controllers/tagController.js';
+import commentController from '../controllers/commentController.js';
 
 //middlewares
 import validateTable from '../middlewares/validateTable.js';
@@ -140,6 +141,18 @@ router.get('/tag/recipe/:id',
     tagController.getRecipes
 );
 router.get('/tag/all', tagController.getAllTags);
+
+//Comment--------
+router.post('/comment', authentication, 
+    ensureParams().onBody(['recipeId', 'content']).shouldNumber(['recipeId']).build(),
+    commentController.newComment
+);
+router.delete('/comment', authentication, 
+    ensureParams().onBody(['commentId']).shouldNumber(['commentId']).build(),
+    commentController.deleteComment
+);
+router.get('/comment/:id', numberIdOnParam, commentController.getById);
+router.get('/comment/recipe/:id', numberIdOnParam, commentController.getByRecipeId);
 
 //admin--------
 router.get('/admin/db/init', 
