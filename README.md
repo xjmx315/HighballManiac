@@ -67,6 +67,15 @@ Express 기반의 서버로 API를 제공합니다.
 |**/tag/recipe/:id**|GET|param: id|특정 태그가 포함된 레시피를 조회합니다. |
 |**/tag/all**|GET|-|모든 태그 목록을 조회합니다. |
 
+### Comment
+
+|경로|메소드|인자|내용|
+|---|---|---|---|
+|**/comment**|POST|body: recipeId, content / header: authorization|댓글을 작성합니다. |
+|**/comment**|DELETE|body: commentId / header: authorization|댓글을 삭제합니다. |
+|**/comment/:id**|GET|param: id|댓글을 조회합니다. |
+|**/comment/recipe/:id**|GET|param: id|레시피의 댓글 목록을 조회합니다. |
+
 ### Admin
 
 |경로|메소드|인자|내용|
