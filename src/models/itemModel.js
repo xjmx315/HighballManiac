@@ -1,6 +1,8 @@
 //itemModel.js
 
-import db from './db.js';
+import {getPool} from './db.js';
+
+const db = getPool();
 
 const getItems = async () => {
     try{

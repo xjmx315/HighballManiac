@@ -1,6 +1,8 @@
 //ingredientsModel.js
 
-import db from './db.js';
+import {getPool} from './db.js';
+
+const db = getPool();
 
 const newIngredient = async ({name, description, image}) => {
     const result = await db.execute(

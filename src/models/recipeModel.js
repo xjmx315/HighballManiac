@@ -1,6 +1,8 @@
 //recipeModel.js
 
-import db from './db.js';
+import {getPool} from './db.js';
+
+const db = getPool();
 
 const newRecipe = async ({ name, description, recipe, alcohol, image, ingredients, items, userId, tags }) => {
     const [result] = await db.execute(

@@ -1,6 +1,8 @@
 //tagModel.js
 
-import db from './db.js';
+import {getPool} from './db.js';
+
+const db = getPool();
 
 const searchTags = async (searchTerm) => {
     const [result] = await db.execute("SELECT * FROM tags WHERE name LIKE ?;", [`%${searchTerm}%`]);

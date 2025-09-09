@@ -1,12 +1,14 @@
 //seedManager.js
 
-import db from './db.js';
+import {getPool} from './db.js';
 import {readFile, writeFile} from 'fs/promises';
 import {createReadStream} from 'fs';
 import path from 'path';
 import { Parser } from 'json2csv';
 import dotenv from 'dotenv';
 import csv from 'csv-parser';
+
+const db = getPool();
 
 dotenv.config();
 

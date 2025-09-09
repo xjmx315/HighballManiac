@@ -8,16 +8,25 @@ import path from 'path';
 import logger from './middlewares/logger.js';
 import apiRouter from './routes/apiRouter.js';
 import errorHandler from './middlewares/errorHandler.js';
+import { ensureDB } from './models/db.js';
 
-// 환경 변수 로드
+// 환경 변수
 dotenv.config();
 
-//폴더 생성
+//csv seed 폴더
 const __dirname = path.resolve();
 const csvPath = path.join(__dirname, process.env.CSVPATH || 'csvFiles');
 if (!fs.existsSync(csvPath)) {
     fs.mkdirSync(csvPath);
 }
+
+//DB pool
+ensureDB().then((value) => {
+    if (value) {
+        console.error(value);
+        process.exit(1);
+    }
+});
 
 // express obj 생성
 const app = express();

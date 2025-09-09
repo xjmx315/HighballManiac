@@ -1,6 +1,8 @@
 //commentModel.js
 
-import db from './db.js';
+import {getPool} from './db.js';
+
+const db = getPool();
 
 const newComment = async (recipeId, content, userId) => {
     const result = await db.execute(

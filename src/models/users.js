@@ -1,6 +1,8 @@
 //users.js
 
-import db from './db.js';
+import {getPool} from './db.js';
+
+const db = getPool();
 
 const getIdByName = async (name) => {
     /*name이 일치하는 유저가 있으면 키를 반환. 없으면 [] 반환*/
