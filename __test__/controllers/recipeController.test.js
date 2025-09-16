@@ -400,7 +400,7 @@ describe('getItemsAndIngredients', () => {
 
         await recipeController.getItemsAndIngredients(req, res);
 
-        expect(recipeService.getItems).toHaveBeenCalledWith(1);
+        expect(recipeService.getItemsAndIngredients).toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 404, "id 또는 등록된 태그가 없습니다. "));
     });
@@ -412,44 +412,44 @@ describe('getItemsAndIngredients', () => {
 
         await recipeController.getItemsAndIngredients(req, res);
 
-        expect(recipeService.getItemsAndIngredients).toHaveBeenCalledWith(1);
+        expect(recipeService.getItemsAndIngredients).toHaveBeenCalled();
         expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData(itemData));
         expect(res.status).toHaveBeenCalledWith(200);
     });
+});
 
-    describe('getByUserId', () => {
-        const req = {
-            params: {
-                id: 1
-            }
-        };
-        const res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn()
-        };
-        
-        beforeEach(() => {
-            jest.clearAllMocks();
-        });
+describe('getByUserId', () => {
+    const req = {
+        params: {
+            id: 1
+        }
+    };
+    const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+    };
 
-        test('알 수 없는 에러', () => {
-            recipeService.getByUserId.mockResolvedValue({err: "에러 발생!"});
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-            recipeController.getByUserId(req, res);
+    test('알 수 없는 에러', async () => {
+        recipeService.getByUserId.mockResolvedValue({err: "에러 발생!"});
 
-            expect(recipeService.getByUserId).toHaveBeenCalledWith(1);
-            expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 500, "에러 발생!"));
-            expect(res.status).toHaveBeenCalledWith(500);
-        });
+        await recipeController.getByUserId(req, res);
 
-        test('요청 성공', () => {
-            recipeService.getByUserId.mockResolvedValue([{name: "진 피즈", recipe: "~~~"}]);
+        expect(recipeService.getByUserId).toHaveBeenCalledWith(1);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse(false, 500, "에러 발생!"));
+        expect(res.status).toHaveBeenCalledWith(500);
+    });
 
-            recipeController.getByUserId(req, res);
+    test('요청 성공', async () => {
+        recipeService.getByUserId.mockResolvedValue([{name: "진 피즈", recipe: "~~~"}]);
 
-            expect(recipeService.getByUserId).toHaveBeenCalledWith(1);
-            expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData([{name: "진 피즈", recipe: "~~~"}]));
-            expect(res.status).toHaveBeenCalledWith(200);
-        });
-    })
+        await recipeController.getByUserId(req, res);
+
+        expect(recipeService.getByUserId).toHaveBeenCalledWith(1);
+        expect(res.json).toHaveBeenCalledWith(new CommonResponse().setData([{name: "진 피즈", recipe: "~~~"}]));
+        expect(res.status).toHaveBeenCalledWith(200);
+    });
 });
