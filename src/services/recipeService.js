@@ -30,8 +30,8 @@ const newRecipe = async (recipe) => {
         recipe.image = '';
     }
     try {
-        const result = await recipeModel.newRecipe(recipe);
-        return {ok: true, id: result.insertId};
+        const insertId = await recipeModel.newRecipe(recipe);
+        return {ok: true, id: insertId};
     }
     catch (e) {
         if (e.message.startsWith('Duplicate entry')) {

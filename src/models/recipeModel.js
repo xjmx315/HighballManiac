@@ -5,35 +5,53 @@ import {getPool} from './db.js';
 const db = getPool();
 
 const newRecipe = async ({ name, description, recipe, alcohol, image, ingredients, items, userId, tags }) => {
-    const [result] = await db.execute(
-        'INSERT INTO recipes (user_id, name, description, recipe, alcohol_percentage, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
-        [userId, name, description, recipe, alcohol, image]
-    );
+    //트랜잭션을 사용합니다. 
+    const conn = await db.getConnection();
+    await conn.beginTransaction();
 
-    const recipe_id = result.insertId;
-
-    for (const ingredient_id of ingredients) {
-        await db.execute(
-            'INSERT INTO recipes_ingredients (recipe_id, ingredient_id) VALUES (?, ?)', 
-            [recipe_id, ingredient_id]
+    let insertId;
+    try {
+        const [result] = await conn.execute(
+            'INSERT INTO recipes (user_id, name, description, recipe, alcohol_percentage, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+            [userId, name, description, recipe, alcohol, image]
         );
+    
+        const recipe_id = result.insertId;
+        insertId = result.insertId;
+ 
+        for (const ingredient_id of ingredients) {
+            await conn.execute(
+                'INSERT INTO recipes_ingredients (recipe_id, ingredient_id) VALUES (?, ?)', 
+                [recipe_id, ingredient_id]
+            );
+        }
+    
+        for (const item_id of items) {
+            await conn.execute(
+                'INSERT INTO recipes_items (recipe_id, item_id) VALUES (?, ?)', 
+                [recipe_id, item_id]
+            );
+        }
+    
+        for (const tag_id of tags) {
+            await conn.execute(
+                'INSERT INTO recipes_tags (recipe_id, tag_id) VALUES (?, ?)', 
+                [recipe_id, tag_id]
+            );
+        }
+
+        await conn.commit();
+    }
+    catch (e) {
+        console.error("newRecipe: ", e);
+        await conn.rollback();
+        throw e;
+    }
+    finally {
+        conn.release();
     }
 
-    for (const item_id of items) {
-        await db.execute(
-            'INSERT INTO recipes_items (recipe_id, item_id) VALUES (?, ?)', 
-            [recipe_id, item_id]
-        );
-    }
-
-    for (const tag_id of tags) {
-        await db.execute(
-            'INSERT INTO recipes_tags (recipe_id, tag_id) VALUES (?, ?)', 
-            [recipe_id, tag_id]
-        );
-    }
-
-    return result;
+    return insertId;
 };
 
 const addTag = async (recipeId, tagId) => {
