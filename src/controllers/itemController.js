@@ -2,14 +2,15 @@
 
 import itemService from '../services/itemService.js';
 import CommonResponse from '../prototype/commonResponse.js';
+import { ServiceError } from '../errors/CommonError.js';
 
 const getItems = async (req, res) => {
     try {
         const items = await itemService.getItems();
-        res.json(new CommonResponse().setData(items));
+        res.status(200).json(new CommonResponse().setData(items));
     }
     catch (error){
-        res.status(500).json(new CommonResponse(false, 500, error.message));
+        return next(new ServiceError('getItems is Not Working'));
     }
 };
 
@@ -28,6 +29,6 @@ const searchItemByName = async (req, res) => {
 };
 
 export default { 
-    getItems: getItems,
-    searchItemByName: searchItemByName
+    getItems,
+    searchItemByName
 };

@@ -12,6 +12,6 @@ const searchItemByName = async (searchTerm) => {
 };
 
 export default {
-    getItems: getItems,
-    searchItemByName: searchItemByName
+    getItems,
+    searchItemByName
 };
