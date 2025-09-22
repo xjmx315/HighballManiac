@@ -143,10 +143,6 @@ const getItemsAndIngredients = async (req, res) => {
     return res.status(200).json(new CommonResponse().setData(result));
 };
 
-const getPopuler = (req, res) => {
-    return res.status(500).json(new CommonResponse(false, 500, '아직 구현되지 않은 기능입니다. '));
-};
-
 const getNewest = async (req, res) => {
     const result = await recipeService.getNewest();
     if (result.err) {
@@ -196,7 +192,6 @@ export default {
     getById,
     getTags,
     getItemsAndIngredients,
-    getPopuler,
     getNewest,
     getRandom,
     searchRecipeByName,

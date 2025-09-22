@@ -114,7 +114,6 @@ router.get('/recipe/writtenby/:id',
     numberIdOnParam, 
     recipeController.getByUserId
 );
-router.get('/recipe/populer', recipeController.getPopuler);
 router.get('/recipe/newest', recipeController.getNewest);
 router.get('/recipe/random', recipeController.getRandom);
 router.get('/recipe/search', recipeController.searchRecipeByName);

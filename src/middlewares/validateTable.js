@@ -10,7 +10,7 @@ const validateTable = (req, res, next) => {
         'recipes', 
         'comments', 
         'tags', 
-        'recipes_tages', 
+        'recipes_tags', 
         'recipes_items',
         'recipes_ingredients',
         'items_ingredients'

@@ -9,6 +9,7 @@ import logger from './middlewares/logger.js';
 import apiRouter from './routes/apiRouter.js';
 import errorHandler from './middlewares/errorHandler.js';
 import { ensureDB } from './models/db.js';
+import { NotFoundError } from './errors/CommonError.js';
 
 // 환경 변수
 dotenv.config();
@@ -47,9 +48,7 @@ app.use(logger);
 app.use('/api', apiRouter);
 
 app.use((req, res, next) => {
-    const err = new Error(`Not Found: ${req.method} ${req.originalUrl}`);
-    err.status = 404;
-    next(err);
+    next(new NotFoundError(`Not Found: ${req.method} ${req.originalUrl}`));
 });
 
 app.use(errorHandler);

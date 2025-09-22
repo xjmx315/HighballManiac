@@ -22,6 +22,12 @@ class ConflictError extends CommonError {
     };
 };
 
+class NotFoundError extends CommonError {
+    constructor(message, details) {
+        super(message, 404, 'NOT_FOUND', details);
+    };
+};
+
 
 //500~
 class ServiceError extends CommonError {
@@ -34,5 +40,6 @@ export {
     CommonError,
     ValidationError,
     ConflictError,
+    NotFoundError,
     ServiceError
 }
