@@ -1,14 +1,14 @@
 //itemService.js
 
 //import getItems from '../controllers/itemController';
-import Item from '../models/itemModel.js';
+import itemModel from '../models/itemModel.js';
 
 const getItems = async () => {
-    return await Item.getItems();
+    return await itemModel.getItems();
 };
 
 const searchItemByName = async (searchTerm) => {
-    return await Item.searchItemByName(searchTerm);
+    return await itemModel.searchItemByName(searchTerm);
 };
 
 export default {

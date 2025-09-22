@@ -2,7 +2,7 @@
 
 import itemService from '../services/itemService.js';
 import CommonResponse from '../prototype/commonResponse.js';
-import { ServiceError } from '../errors/CommonError.js';
+import { ServiceError, CommonError } from '../errors/CommonError.js';
 
 const getItems = async (req, res) => {
     try {
@@ -10,7 +10,10 @@ const getItems = async (req, res) => {
         res.status(200).json(new CommonResponse().setData(items));
     }
     catch (error){
-        return next(new ServiceError('getItems is Not Working'));
+        if (error instanceof CommonError) {
+            return next(error);
+        }
+        return next(new ServiceError('searchItemByName is Not Working', error));
     }
 };
 
@@ -24,7 +27,10 @@ const searchItemByName = async (req, res) => {
         res.status(200).json(new CommonResponse().setData(result));
     }
     catch (error){
-        res.status(500).json(new CommonResponse(false, 500, error.message));
+        if (error instanceof CommonError) {
+            return next(error);
+        }
+        return next(new ServiceError('searchItemByName is Not Working', error));
     }
 };
 
