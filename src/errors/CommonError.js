@@ -30,9 +30,9 @@ class NotFoundError extends CommonError {
 
 
 //500~
-class ServiceError extends CommonError {
+class ServerError extends CommonError {
     constructor(message, details) {
-        super(message, 500, 'SERVICE_ERROR', details);
+        super(message, 500, 'SERVER_ERROR', details);
     };
 };
 
@@ -41,5 +41,5 @@ export {
     ValidationError,
     ConflictError,
     NotFoundError,
-    ServiceError
+    ServerError
 }
