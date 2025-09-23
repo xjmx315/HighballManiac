@@ -1,5 +1,5 @@
 //asyncHandler.js
-import { CommonError, ServerError } from "../errors/CommonError";
+import { CommonError, ServerError } from "../errors/CommonError.js";
 
 const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(error => {

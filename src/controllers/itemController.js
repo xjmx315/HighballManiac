@@ -2,7 +2,6 @@
 
 import itemService from '../services/itemService.js';
 import CommonResponse from '../prototype/commonResponse.js';
-import { CommonError } from '../errors/CommonError.js';
 import asyncHandler from './asyncHandler.js';
 
 const getItems = asyncHandler(async (req, res) => {
