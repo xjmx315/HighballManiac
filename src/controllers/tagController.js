@@ -2,8 +2,9 @@
 
 import CommonResponse from "../prototype/commonResponse.js";
 import tagService from "../services/tagService.js";
+import asyncHandler from "./asyncHandler.js";
 
-const searchTags = async (req, res) => {
+const searchTags = asyncHandler(async (req, res) => {
     const searchTerm = req.query.name;
     if (!searchTerm) {
         return res.status(400).json(new CommonResponse(false, 400, "쿼리가 누락되었습니다. "));
@@ -11,9 +12,9 @@ const searchTags = async (req, res) => {
 
     const result = await tagService.searchTags(searchTerm);
     return res.status(200).json(new CommonResponse().setData(result));
-};
+});
 
-const getById = async (req, res) => {
+const getById = asyncHandler(async (req, res) => {
     const tagId = Number(req.params.id);
     if (isNaN(tagId)) {
         return res.status(400).json(new CommonResponse(false, 400, "쿼리 형식이 잘못되었습니다. "));
@@ -25,9 +26,9 @@ const getById = async (req, res) => {
     }
 
     return res.status(200).json(new CommonResponse().setData(tagData));
-};
+});
 
-const getRecipes = async (req, res) => {
+const getRecipes = asyncHandler(async (req, res) => {
     const tagId = Number(req.params.id);
     if (isNaN(tagId)) {
         return res.status(400).json(new CommonResponse(false, 400, "쿼리 형식이 잘못되었습니다. "));
@@ -41,16 +42,16 @@ const getRecipes = async (req, res) => {
     const recipes = await tagService.getRecipes(tagId);
 
     return res.status(200).json(new CommonResponse().setData(recipes));
-};
+});
 
-const getAllTags = async (req, res) => {
+const getAllTags = asyncHandler(async (req, res) => {
     const tags = await tagService.getAllTags();
 
     if (tags.err) {
         return res.status(500).json(new CommonResponse(false, 500, tags.err));
     }
     return res.status(200).json(new CommonResponse().setData(tags));
-};
+});
 
 export default {
     searchTags,

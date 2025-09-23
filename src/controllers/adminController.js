@@ -1,16 +1,16 @@
 //adminController.js
 
-import usersService from "../services/usersService.js";
 import seedManager from "../models/seedManager.js";
 import CommonResponse from "../prototype/commonResponse.js";
 import path from "path";
+import asyncHandler from "./asyncHandler.js"
 
 import dotenv from "dotenv";
 dotenv.config();
 
 const csvSeedPath = process.env.CSVPATH || 'csvFiles/';
 
-const initDB = async (req, res) => {
+const initDB = asyncHandler(async (req, res) => {
     //테이블을 모두 DROP하고 처음부터 다시 만든다. 스키마 구조 변경시 사용. 
     const {adminPassword} = req.body;
 
@@ -29,9 +29,9 @@ const initDB = async (req, res) => {
     }
 
     return res.status(200).json(new CommonResponse());
-};
+});
 
-const updateTable = async (req, res) => {
+const updateTable = asyncHandler(async (req, res) => {
     const {tableName} = req.params;
 
     if (!req.file) {
@@ -52,9 +52,9 @@ const updateTable = async (req, res) => {
     catch (e) {
         return res.status(500).json(new CommonResponse(false, 500, e.message));
     }
-};
+});
 
-const exportTable = async (req, res) => {
+const exportTable = asyncHandler(async (req, res) => {
     const {tableName} = req.params;
 
     const filePath = await seedManager._exportTabletoCsv(tableName, csvSeedPath);
@@ -74,9 +74,9 @@ const exportTable = async (req, res) => {
             .status(500)
             .json(new CommonResponse(false, 500, 'csv파일 내보내기에 실패했습니다. '));
     }
-};
+});
 
-const deleteTable = async (req, res) => {
+const deleteTable = asyncHandler(async (req, res) => {
     const {tableName} = req.params;
 
     const succeed = seedManager._deleteData(tableName);
@@ -84,9 +84,9 @@ const deleteTable = async (req, res) => {
         res.status(200).json(new CommonResponse());
     }
     else {
-        res.status(500).json(new CommonResponse(false, 500, '테이블 삭제에 실패했습니다. '))
+        res.status(500).json(new CommonResponse(false, 500, '테이블 삭제에 실패했습니다. '));
     }
-};
+});
 
 export default {
     initDB,

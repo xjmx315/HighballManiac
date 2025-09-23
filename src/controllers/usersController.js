@@ -2,7 +2,7 @@
 import usersService from '../services/usersService.js';
 import CommonResponse from '../prototype/commonResponse.js';
 
-const newUser = async (req, res) => {
+const newUser = asyncHandler(async (req, res) => {
     const {email, password, name} = req.body;
     
     //id, pw 유효성 검사
@@ -19,9 +19,9 @@ const newUser = async (req, res) => {
     //사용자 정보 저장
     usersService.addUser({email, password, name});
     return res.status(201).json(new CommonResponse().setCode(201));
-};
+});
 
-const login = async (req, res) => {
+const login = asyncHandler(async (req, res) => {
     const {password, name} = req.body;
 
     if (!password || !name){
@@ -35,9 +35,9 @@ const login = async (req, res) => {
     else {
         return res.status(401).json(new CommonResponse(false, 401, "아이디 또는 비밀번호가 올바르지 않습니다"));
     }
-};
+});
 
-const deleteUser = async (req, res) => {
+const deleteUser = asyncHandler(async (req, res) => {
     const {password} = req.body;
     if (!password) {
         return res.status(401).json(new CommonResponse(false, 401, '비밀번호가 필요합니다. '));
@@ -61,9 +61,9 @@ const deleteUser = async (req, res) => {
         res.status(400).json(new CommonResponse(false, 400, message));
         }
     }
-};
+});
 
-const getProfile = async (req, res) => {
+const getProfile = asyncHandler(async (req, res) => {
     //유저의 이름으로 프로필 정보를 get
     const targetName = req.query.name;
     if (!targetName) {
@@ -79,9 +79,9 @@ const getProfile = async (req, res) => {
     console.log(created_at);
 
     return res.status(200).json(new CommonResponse().setData({ userName: targetName, userId, created_at }))
-};
+});
 
-const tokenCheck = async (req, res) => {
+const tokenCheck = asyncHandler(async (req, res) => {
     //토큰 포함 여부 check
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -97,9 +97,9 @@ const tokenCheck = async (req, res) => {
     else {
         return res.status(401).json(new CommonResponse(false, 401, 'rejected'));
     }
-};
+});
 
-const searchUser = async (req, res) => {
+const searchUser = asyncHandler(async (req, res) => {
     const name = req.params.name;
 
     const userData = await usersService.searchUser(name);
@@ -108,7 +108,7 @@ const searchUser = async (req, res) => {
         return res.status(500).json(new CommonResponse(false, 500, users.err));
     }
     return res.status(200).json(new CommonResponse().setData(userData));
-};
+});
 
 export default {
     newUser,
