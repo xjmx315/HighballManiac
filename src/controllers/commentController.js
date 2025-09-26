@@ -13,14 +13,9 @@ const newComment = asyncHandler(async (req, res) => {
 
 const deleteComment = asyncHandler(async (req, res) => {
     const {commentId} = req.body;
-
-    //user검증 후 삭제
-    const targetComment = await commentService.getById(commentId);
-    if (req.userInfo.userId === targetComment[0].user_id){
-        await commentService.deleteComment(commentId);
-        return res.status(200).json(new CommonResponse());
-    }
-    return res.status(400).json(new CommonResponse(false, 400, "댓글을 삭제할 권한이 없습니다. "))
+    const userId = req.userInfo.userId;
+    commentService.deleteComment(commentId, userId);
+    return res.status(200).json(new CommonResponse());
 });
 
 const getById = asyncHandler(async (req, res) => {

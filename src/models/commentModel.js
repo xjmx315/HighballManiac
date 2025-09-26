@@ -1,6 +1,7 @@
 //commentModel.js
 
 import {getPool} from './db.js';
+import { NotFoundError } from '../errors/CommonError.js';
 
 const db = getPool();
 
@@ -25,7 +26,10 @@ const getById = async (commentId) => {
         'SELECT * FROM comments WHERE id = ?',
         [commentId]
     );
-    return result;
+    if (result.length === 0){
+        throw new NotFoundError(`comment not found (id: ${commentId})`);
+    }
+    return result[0];
 };
 
 const getByRecipeId = async (recipeId) => {
