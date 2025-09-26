@@ -15,6 +15,12 @@ class ValidationError extends CommonError {
         super(message, 400, 'VALIDATION_ERROR', details);
     };
 };
+
+class UnauthorizedError extends CommonError {
+    constructor(message, details) {
+        super(message, 401, 'UNAUTHORIZED_ERROR', details);
+    };
+};
   
 class ConflictError extends CommonError {
     constructor(message, details) {
@@ -41,5 +47,6 @@ export {
     ValidationError,
     ConflictError,
     NotFoundError,
+    UnauthorizedError,
     ServerError
 }

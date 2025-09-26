@@ -1,4 +1,4 @@
-//users.js
+//userModel.js
 
 import {getPool} from './db.js';
 
