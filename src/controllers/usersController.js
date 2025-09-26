@@ -2,6 +2,7 @@
 import usersService from '../services/usersService.js';
 import CommonResponse from '../prototype/commonResponse.js';
 import { UnauthorizedError, NotFoundError } from '../errors/CommonError.js';
+import asyncHandler from './asyncHandler.js';
 
 const newUser = asyncHandler(async (req, res) => {
     const {email, password, name} = req.body;
