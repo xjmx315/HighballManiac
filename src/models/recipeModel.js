@@ -1,11 +1,13 @@
 //recipeModel.js
 
 import {getPool} from './db.js';
+import { NotFoundError } from '../errors/CommonError.js';
 
 const db = getPool();
 
 const newRecipe = async ({ name, description, recipe, alcohol, image, ingredients, items, userId, tags }) => {
-    //트랜잭션을 사용합니다. 
+    //트랜잭션 사용
+    //TODO: 확장 삽입
     const conn = await db.getConnection();
     await conn.beginTransaction();
 
@@ -18,7 +20,7 @@ const newRecipe = async ({ name, description, recipe, alcohol, image, ingredient
     
         const recipe_id = result.insertId;
         insertId = result.insertId;
- 
+
         for (const ingredient_id of ingredients) {
             await conn.execute(
                 'INSERT INTO recipes_ingredients (recipe_id, ingredient_id) VALUES (?, ?)', 
@@ -66,12 +68,39 @@ const deleteTag = async (recipeId, tagId) => {
     return result;
 };
 
+const setTags = async (recipeId, tagListTo) => {
+    //트랜잭션
+    const conn = await db.getConnection();
+    await conn.beginTransaction();
+
+    try {
+        //일괄 삭제
+        await conn.execute('DELETE FROM recipes_tags WHERE recipe_id = ?;', [recipeId]);
+        //확장 삽입
+        //동적 플레이스홀더
+        const placeholders = tagListTo && tagListTo.length > 0 ? tagListTo.map(() => `(${recipeId}, ?)`).join(',') : 'NULL';
+        const insertQuery = `INSERT INTO recipes_tags (recipe_id, tag_id) VALUES ${placeholders};`;
+        await conn.execute(insertQuery, tagListTo);
+    }
+    catch (e) {
+        console.error("newRecipe: ", e);
+        await conn.rollback();
+        throw e;
+    }
+    finally{
+        conn.release();
+    }
+};
+
 const getById = async (id) => {
     const [recipe] = await db.execute(
         'SELECT * FROM recipes WHERE id = ?;',
         [id]
     );
-    return recipe;
+    if (recipe.length === 0) {
+        throw new NotFoundError(`recipe not found (id: ${id})`);
+    }
+    return recipe[0];
 };
 
 const getTags = async (id) => {
@@ -179,6 +208,7 @@ export default {
     newRecipe,
     addTag,
     deleteTag,
+    setTags,
     getById,
     getTags,
     getItems, 

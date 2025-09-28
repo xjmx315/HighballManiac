@@ -21,10 +21,10 @@ class UnauthorizedError extends CommonError {
         super(message, 401, 'UNAUTHORIZED_ERROR', details);
     };
 };
-  
-class ConflictError extends CommonError {
+
+class ForbiddenError extends CommonError {
     constructor(message, details) {
-        super(message, 409, 'CONFLICT', details);
+        super(message, 403, 'FORBIDDEN_ERROR', details);
     };
 };
 
@@ -34,6 +34,11 @@ class NotFoundError extends CommonError {
     };
 };
 
+class ConflictError extends CommonError {
+    constructor(message, details) {
+        super(message, 409, 'CONFLICT', details);
+    };
+};
 
 //500~
 class ServerError extends CommonError {
@@ -46,6 +51,7 @@ export {
     CommonError,
     ValidationError,
     ConflictError,
+    ForbiddenError,
     NotFoundError,
     UnauthorizedError,
     ServerError

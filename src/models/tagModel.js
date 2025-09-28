@@ -1,6 +1,7 @@
 //tagModel.js
 
 import {getPool} from './db.js';
+import { NotFoundError } from '../errors/CommonError.js';
 
 const db = getPool();
 
@@ -11,7 +12,10 @@ const searchTags = async (searchTerm) => {
 
 const getById = async (id) => {
     const [result] = await db.execute("SELECT * FROM tags WHERE id=?;", [id]);
-    return result;
+    if (result.length === 0) {
+        throw new NotFoundError(`tag not found (id: ${id})`);
+    }
+    return result[0];
 };
 
 const getRecipes = async (id) => {

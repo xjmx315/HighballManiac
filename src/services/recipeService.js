@@ -1,6 +1,8 @@
 //recipeService.js
 
 import recipeModel from "../models/recipeModel.js";
+import tagModel from "../models/tagModel.js";
+import { ConflictError, NotFoundError, ForbiddenError, UnauthorizedError } from "../errors/CommonError.js";
 
 const _joinItemIngre = (items, ingrs) => {
     //item의 id에 +100을 해서 병합
@@ -23,7 +25,17 @@ const _splitItemIngre = (ids) => {
     });
 
     return {items, ingredients};
-}
+};
+
+const _isHeCanUpdate = async (recipeId, requestUser) => {
+    //1. 존재하는 레시피
+    const recipe = await recipeModel.getById(recipeId);
+    //2. 수정 권한이 있는 레시피
+    if (recipe.user_id !== requestUser) {
+        throw new ForbiddenError("레시피를 수정할 권한이 없습니다. ");
+    }
+    return true;
+};
 
 const newRecipe = async (recipe) => {
     if (!recipe.image) {
@@ -31,133 +43,67 @@ const newRecipe = async (recipe) => {
     }
     try {
         const insertId = await recipeModel.newRecipe(recipe);
-        return {ok: true, id: insertId};
+        return insertId;
     }
     catch (e) {
-        if (e.message.startsWith('Duplicate entry')) {
-            return { ok: false, message: '이미 같은 이름의 레시피가 있습니다. '};
+        if (e.message.startsWith("Duplicate entry")) {
+            throw new ConflictError("이미 같은 이름의 레시피가 있습니다. ");
         }
-        return { ok: false, message: `지정되지 않은 에러가 발생했습니다. : ${e.message}`};
+        throw e;
     }
 };
 
-const addTag = async (recipeId, tagId) => {
-    try {
-        const result = await recipeModel.addTag(recipeId, tagId);
-        return true;
-    }
-    catch (e) {
-        console.error(e);
-        return false;
-    }
+const addTag = async (recipeId, tagId, requestUser) => {
+    _isHeCanUpdate(recipeId, requestUser);
+    await tagModel.getById(tagId);
+
+    return await recipeModel.addTag(recipeId, tagId);
 };
 
-const deleteTag = async (recipeId, tagId) => {
-    try {
-        const result = await recipeModel.deleteTag(recipeId, tagId);
-        return true;
-    }
-    catch (e) {
-        console.error(e);
-        return false;
-    }
+const deleteTag = async (recipeId, tagId, requestUser) => {
+    _isHeCanUpdate(recipeId, requestUser);
+    return await recipeModel.deleteTag(recipeId, tagId);
 };
 
-const setTags = async (addFunc, deleteFunc, recipeId, tagListFrom, tagListTo) => {
-    const fromSet = new Set(tagListFrom);
-    const toSet = new Set(tagListTo);
-
-    const faileds = [];
-    
-    //from에는 있고 to에는 없는 요소는 delete
-    const deleteProcess = tagListFrom.filter(item => !toSet.has(item)).map(item => deleteFunc(recipeId, item).then((result) => {if (!result) faileds.push(item)}));
-
-    //to에는 있고 from에는 없는 요소는 add
-    const addProcess = tagListTo.filter(item => !fromSet.has(item)).map(item => addFunc(recipeId, item).then((result) => {if (!result) faileds.push(item)}));
-
-    try {
-        await Promise.all(deleteProcess);
-        await Promise.all(addProcess);
-        return faileds;
-    }
-    catch (e) {
-        console.error(e);
-        return faileds;
-    }
+const setTags = async (recipeId, tagListTo, requestUser) => {
+    _isHeCanUpdate(recipeId, requestUser);
+    //데이터 크기가 작으니 일괄 삭제, 삽입
+    return await recipeModel.setTags(recipeId, tagListTo);
 };
 
 const getById = async (id) => {
-    try {
-        const result = await recipeModel.getById(id);
-        if (result.length === 0){
-            return undefined;
-        }
-        return result[0];
-    }
-    catch (e) {
-        console.log(e);
-        return undefined;
-    }
+    const result = await recipeModel.getById(id);
+    return result;
 };
 
 const getTags = async (id) => {
-    try {
-        const result = await recipeModel.getTags(id);
-        if (result.length === 0) {
-            return undefined;
-        }
-        return result;
-    }
-    catch (e) {
-        console.log(e);
-        return undefined;
-    }
+    const result = await recipeModel.getTags(id);
+    return result;
 };
 
 const getItems = async (id) => {
-    try {
-        const result = await recipeModel.getItems(id);
-        if (result.length === 0) {
-            return undefined;
-        }
-        return result;
-    }
-    catch (e) {
-        console.log(e);
+    const result = await recipeModel.getItems(id);
+    if (result.length === 0) {
         return undefined;
     }
+    return result;
 };
 
 const getIngredients = async (id) => {
-    try {
-        const result = await recipeModel.getIngredients(id);
-        if (result.length === 0) {
-            return undefined;
-        }
-        return result;
-    }
-    catch (e) {
-        console.log(e);
+    const result = await recipeModel.getIngredients(id);
+    if (result.length === 0) {
         return undefined;
     }
+    return result;
 };
 
-const getItemsAndIngredients = async (id, itemFunc, ingredientFunc) => {
-    try {
-        const items = await itemFunc(id);
-        const ingredients = await ingredientFunc(id);
+const getItemsAndIngredients = async (id) => {
+    const items = await recipeModel.getItems(id);
+    const ingredients = await recipeModel.getIngredients(id);
 
-        //ingredients에 +100 하여 병합
-        const result = _joinItemIngre(items, ingredients);
-        if (result.length === 0) {
-            return undefined;
-        }
-        return result;
-    }
-    catch (e) {
-        console.log(e);
-        return undefined;
-    }
+    //ingredients에 +100 하여 병합
+    const result = _joinItemIngre(items, ingredients);
+    return result;
 };
 
 const searchRecipeByName = async (name) => {
@@ -174,24 +120,13 @@ const searchRecipeByName = async (name) => {
 const searchByIngredient = async (ids) => {
     //ids"1,102,104" => item[1] ingredient[2, 4]
     const {items, ingredients} = _splitItemIngre(ids);
-
-    try{
-        const recipes = await recipeModel.searchByIngredient(items, ingredients);
-        return recipes;
-    }
-    catch (e) {
-        return {err: e};
-    }
+    const recipes = await recipeModel.searchByIngredient(items, ingredients);
+    return recipes;
 };
 
 const getByUserId = async (id) => {
-    try{
         const recipes = await recipeModel.getByUserId(id);
         return recipes;
-    }
-    catch (e) {
-        return {err: e};
-    }
 };
 
 const getPopualer = async () => {
@@ -199,23 +134,13 @@ const getPopualer = async () => {
 };
 
 const getNewest = async () => {
-    try{
-        const recipes = await recipeModel.getNewest();
-        return recipes;
-    }
-    catch (e) {
-        return {err: e};
-    }
+    const recipes = await recipeModel.getNewest();
+    return recipes;
 };
 
 const getRandom = async () => {
-    try{
-        const recipes = await recipeModel.getRandom();
-        return recipes;
-    }
-    catch (e) {
-        return {err: e};
-    }
+    const recipes = await recipeModel.getRandom();
+    return recipes;
 };  
 
 export default {
