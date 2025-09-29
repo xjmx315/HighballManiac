@@ -3,50 +3,26 @@
 import tagModel from "../models/tagModel.js";
 
 const searchTags = async (searchTerm) => {
-    try {
-        const result = await tagModel.searchTags(searchTerm);
-        return result;
-    }
-    catch (e) {
-        console.log(e);
-        return [];
-    }
+    const result = await tagModel.searchTags(searchTerm);
+    return result;
 };
 
 const getById = async (id) => {
-    try {
         const result = await tagModel.getById(id);
-        if (result.length === 0) {
-            return undefined;
-        }
-        return result[0];
-    }
-    catch (e) {
-        console.error(e);
-        return undefined;
-    }
+        return result;
 };
 
 const getRecipes = async (id) => {
-    try {
-        const result = await tagModel.getRecipes(id);
-        return result;
-    }
-    catch (e) {
-        console.log(e);
-        return [];
-    }
+    //태그가 존재하는지 확인
+    await tagModel.getById(id);
+    //레시피 검색
+    const result = await tagModel.getRecipes(id);
+    return result;
 };
 
 const getAllTags = async () => {
-    try {
-        const result = await tagModel.getAllTags();
-        return result;
-    }
-    catch (e) {
-        console.log(e);
-        return {err: e};
-    }
+    const result = await tagModel.getAllTags();
+    return result;
 };
 
 export default {
