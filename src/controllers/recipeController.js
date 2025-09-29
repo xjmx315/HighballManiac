@@ -1,7 +1,6 @@
 //recipeController.js
 import recipeService from '../services/recipeService.js';
 import CommonResponse from '../prototype/commonResponse.js';
-import tagService from '../services/tagService.js';
 import asyncHandler from './asyncHandler.js';
 
 const newRecipe = asyncHandler(async (req, res) => {
