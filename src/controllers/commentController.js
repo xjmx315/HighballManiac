@@ -8,13 +8,13 @@ const newComment = asyncHandler(async (req, res) => {
     const {recipeId, content} = req.body;
     const userId = req.userInfo.userId;
     const comment = await commentService.newComment(recipeId, content, userId);
-    return res.status(201).json(new CommonResponse());
+    return res.status(201).json(new CommonResponse().setCode(201));
 });
 
 const deleteComment = asyncHandler(async (req, res) => {
     const {commentId} = req.body;
     const userId = req.userInfo.userId;
-    commentService.deleteComment(commentId, userId);
+    await commentService.deleteComment(commentId, userId);
     return res.status(200).json(new CommonResponse());
 });
 
