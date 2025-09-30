@@ -27,7 +27,7 @@ const _splitItemIngre = (ids) => {
     return {items, ingredients};
 };
 
-const _isHeCanUpdate = async (recipeId, requestUser) => {
+const _canUserUpdateRecipe = async (recipeId, requestUser) => {
     //1. 존재하는 레시피
     const recipe = await recipeModel.getById(recipeId);
     //2. 수정 권한이 있는 레시피
@@ -54,19 +54,19 @@ const newRecipe = async (recipe) => {
 };
 
 const addTag = async (recipeId, tagId, requestUser) => {
-    _isHeCanUpdate(recipeId, requestUser);
+    _canUserUpdateRecipe(recipeId, requestUser);
     await tagModel.getById(tagId);
 
     return await recipeModel.addTag(recipeId, tagId);
 };
 
 const deleteTag = async (recipeId, tagId, requestUser) => {
-    _isHeCanUpdate(recipeId, requestUser);
+    _canUserUpdateRecipe(recipeId, requestUser);
     return await recipeModel.deleteTag(recipeId, tagId);
 };
 
 const setTags = async (recipeId, tagListTo, requestUser) => {
-    _isHeCanUpdate(recipeId, requestUser);
+    _canUserUpdateRecipe(recipeId, requestUser);
     //데이터 크기가 작으니 일괄 삭제, 삽입
     return await recipeModel.setTags(recipeId, tagListTo);
 };
